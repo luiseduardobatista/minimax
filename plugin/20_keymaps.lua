@@ -221,7 +221,7 @@ pcall(vim.keymap.del, 'n', 'grr')
 pcall(vim.keymap.del, 'n', 'gra')
 pcall(vim.keymap.del, 'n', 'grn')
 
-nmap('gd', '<Cmd>Pick lsp scope="definition"<CR>',      'LSP Definition')
+nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',      'LSP Definition')
 nmap('gD', '<Cmd>Pick lsp scope="declaration"<CR>',     'LSP Declaration')
 nmap('gr', '<Cmd>Pick lsp scope="references"<CR>',      'LSP References')
 nmap('gI', '<Cmd>Pick lsp scope="implementation"<CR>',  'LSP Implementation')
