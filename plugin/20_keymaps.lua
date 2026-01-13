@@ -16,7 +16,6 @@ end
 
 -- Paste linewise before/after current line
 -- Usage: `yiw` to yank a word and `]p` to put it on the next line.
-nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear search highlight')
 nmap('[p', '<Cmd>exe "put! " . v:register<CR>', 'Paste Above')
 nmap(']p', '<Cmd>exe "put "  . v:register<CR>', 'Paste Below')
 
@@ -103,10 +102,10 @@ local edit_plugin_file = function(filename)
 end
 local explore_at_file = '<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>'
 local explore_quickfix = function()
-  for _, win_id in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    if vim.fn.getwininfo(win_id)[1].quickfix == 1 then return vim.cmd('cclose') end
-  end
-  vim.cmd('copen')
+  vim.cmd(vim.fn.getqflist({ winid = true }).winid ~= 0 and 'cclose' or 'copen')
+end
+local explore_locations = function()
+  vim.cmd(vim.fn.getloclist(0, { winid = true }).winid ~= 0 and 'lclose' or 'lopen')
 end
 
 nmap_leader('ed', '<Cmd>lua MiniFiles.open()<CR>',          'Directory')
@@ -117,7 +116,8 @@ nmap_leader('em', edit_plugin_file('30_mini.lua'),          'MINI config')
 nmap_leader('en', '<Cmd>lua MiniNotify.show_history()<CR>', 'Notifications')
 nmap_leader('eo', edit_plugin_file('10_options.lua'),       'Options config')
 nmap_leader('ep', edit_plugin_file('40_plugins.lua'),       'Plugins config')
-nmap_leader('eq', explore_quickfix,                         'Quickfix')
+nmap_leader('eq', explore_quickfix,                         'Quickfix list')
+nmap_leader('eQ', explore_locations,                        'Location list')
 
 -- f is for 'Fuzzy Find'. Common usage:
 -- - `<Leader>ff` - find files; for best performance requires `ripgrep`
@@ -129,19 +129,6 @@ nmap_leader('eq', explore_quickfix,                         'Quickfix')
 -- All these use 'mini.pick'. See `:h MiniPick-overview` for an overview.
 local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
 local pick_workspace_symbols_live = '<Cmd>Pick lsp scope="workspace_symbol_live"<CR>'
-local make_pick_recent = function(cwd, desc)
-  return function()
-    local sort_recent = MiniVisits.gen_sort.default({ recency_weight = 1, freq_weight = 0 })
-    local current_path = vim.fn.expand('%:p')
-    local filter_exclude_current = function(path_data)
-      return path_data.path ~= current_path
-    end
-    MiniExtra.pickers.visit_paths(
-      { cwd = cwd, sort = sort_recent, filter = filter_exclude_current },
-      { source = { name = desc } }
-    )
-  end
-end
 
 nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>',            '"/" history')
 nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>',            '":" history')
@@ -165,8 +152,8 @@ nmap_leader('fr', '<Cmd>Pick resume<CR>',                       'Resume')
 nmap_leader('fR', '<Cmd>Pick lsp scope="references"<CR>',       'References (LSP)')
 nmap_leader('fs', pick_workspace_symbols_live,                  'Symbols workspace (live)')
 nmap_leader('fS', '<Cmd>Pick lsp scope="document_symbol"<CR>',  'Symbols document')
-nmap_leader('fv', make_pick_recent(nil, 'Visit paths (cwd/recent)'), 'Visit paths (cwd)')
-nmap_leader('fV', make_pick_recent('',  'Visit paths (all/recent)'), 'Visit paths (all)')
+nmap_leader('fv', '<Cmd>Pick visit_paths cwd=""<CR>',           'Visit paths (all)')
+nmap_leader('fV', '<Cmd>Pick visit_paths<CR>',                  'Visit paths (cwd)')
 
 -- g is for 'Git'. Common usage:
 -- - `<Leader>gs` - show information at cursor

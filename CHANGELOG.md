@@ -1,3 +1,7 @@
+## 2026-01-08
+
+- Improve keymaps for exploring quickfix list (make implementation shorter and more robust) and location list (add it as `<Leader>eQ` to compliment `<Leader>eq` for quickfix).
+
 ## 2026-01-03
 
 - Improve 'mini.clue' setup:
