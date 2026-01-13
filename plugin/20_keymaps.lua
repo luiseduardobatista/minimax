@@ -221,11 +221,23 @@ pcall(vim.keymap.del, 'n', 'grr')
 pcall(vim.keymap.del, 'n', 'gra')
 pcall(vim.keymap.del, 'n', 'grn')
 
-nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',      'LSP Definition')
-nmap('gD', '<Cmd>Pick lsp scope="declaration"<CR>',     'LSP Declaration')
-nmap('gr', '<Cmd>Pick lsp scope="references"<CR>',      'LSP References')
-nmap('gI', '<Cmd>Pick lsp scope="implementation"<CR>',  'LSP Implementation')
-nmap('gy', '<Cmd>Pick lsp scope="type_definition"<CR>', 'LSP Type Definition')
+local on_list = function(scope)
+  return function(opts)
+    if #opts.items == 1 then
+      vim.lsp.util.show_document(opts.items[1].user_data, 'utf-8')
+    else
+      require('mini.extra').pickers.lsp({ scope = scope })
+    end
+  end
+end
+
+nmap('gd', function() vim.lsp.buf.definition({ on_list = on_list('definition') }) end,      'LSP Definition')
+nmap('gd', function() vim.lsp.buf.definition({ on_list = on_list('definition') }) end,      'LSP Definition')
+nmap('gD', function() vim.lsp.buf.declaration({ on_list = on_list('declaration') }) end,     'LSP Declaration')
+nmap('gI', function() vim.lsp.buf.implementation({ on_list = on_list('implementation') }) end, 'LSP Implementation')
+nmap('gy', function() vim.lsp.buf.type_definition({ on_list = on_list('type_definition') }) end, 'LSP Type Definition')
+nmap('gr', function() vim.lsp.buf.references(nil, { on_list = on_list('references') }) end,      'LSP References')
+
 nmap('K',  '<Cmd>lua vim.lsp.buf.hover()<CR>',           'LSP Hover')
 nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', 'LSP Signature Help')
 
