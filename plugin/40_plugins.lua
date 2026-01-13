@@ -217,11 +217,19 @@ end)
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
 MiniDeps.now(function()
   -- Install only those that you need
-  -- add('aktersnurra/no-clown-fiesta.nvim')
-  --
-  -- Enable only one
-  -- vim.cmd('color no-clown-fiesta')
-  --
-  -- Fix line highlight not showing on mini.pick
-  -- vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
+  add('rose-pine/neovim')
+  add('vague-theme/vague.nvim')
+  require('rose-pine').setup({
+    styles = {
+      bold = true,
+      italic = false,
+      transparency = true,
+    },
+  })
+  require('vague').setup({
+    transparent = true,
+    italic = false,
+  })
+  vim.cmd('colorscheme vague')
+  vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
 end)
