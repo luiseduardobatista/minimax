@@ -193,6 +193,25 @@ now_if_args(function() add('olexsmir/gopher.nvim') end, function()
   })
 end)
 
+now_if_args(function()
+  add('folke/snacks.nvim')
+  require('snacks').setup({
+    lazygit = { enabled = true },
+    bigfile = { enabled = false },
+    dashboard = { enabled = false },
+    explorer = { enabled = false },
+    indent = { enabled = false },
+    input = { enabled = false },
+    picker = { enabled = false },
+    notifier = { enabled = false },
+    quickfile = { enabled = false },
+    scope = { enabled = false },
+    scroll = { enabled = false },
+    statuscolumn = { enabled = false },
+    words = { enabled = false },
+  })
+end)
+
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
