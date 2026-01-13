@@ -130,6 +130,20 @@ nmap_leader('eQ', explore_locations,                        'Location list')
 local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
 local pick_workspace_symbols_live = '<Cmd>Pick lsp scope="workspace_symbol_live"<CR>'
 
+local make_pick_recent = function(cwd, desc)
+  return function()
+    local sort_recent = MiniVisits.gen_sort.default({ recency_weight = 1, freq_weight = 0 })
+    local current_path = vim.fn.expand('%:p')
+    local filter_exclude_current = function(path_data)
+      return path_data.path ~= current_path
+    end
+    MiniExtra.pickers.visit_paths(
+      { cwd = cwd, sort = sort_recent, filter = filter_exclude_current }, 
+      { source = { name = desc } }
+    )
+  end
+end
+
 nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>',            '"/" history')
 nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>',            '":" history')
 nmap_leader('fa', '<Cmd>Pick git_hunks scope="staged"<CR>',     'Added hunks (all)')
@@ -152,8 +166,8 @@ nmap_leader('fr', '<Cmd>Pick resume<CR>',                       'Resume')
 nmap_leader('fR', '<Cmd>Pick lsp scope="references"<CR>',       'References (LSP)')
 nmap_leader('fs', pick_workspace_symbols_live,                  'Symbols workspace (live)')
 nmap_leader('fS', '<Cmd>Pick lsp scope="document_symbol"<CR>',  'Symbols document')
-nmap_leader('fv', '<Cmd>Pick visit_paths cwd=""<CR>',           'Visit paths (all)')
-nmap_leader('fV', '<Cmd>Pick visit_paths<CR>',                  'Visit paths (cwd)')
+nmap_leader('fv', make_pick_recent(nil, 'Visit paths (cwd/recent)'), 'Visit paths (cwd)')
+nmap_leader('fV', make_pick_recent('',  'Visit paths (all/recent)'), 'Visit paths (all)')
 
 -- g is for 'Git'. Common usage:
 -- - `<Leader>gs` - show information at cursor
