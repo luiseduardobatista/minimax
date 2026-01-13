@@ -302,9 +302,6 @@ later(function()
       { mode = { 'n', 'x' }, keys = 's' },        -- `s` key (mini.surround, etc.)
       { mode = { 'n', 'x' }, keys = 'z' },        -- `z` key
     },
-    window = {
-      delay = 0,
-    }
   })
 end)
 
@@ -625,18 +622,18 @@ later(function() require('mini.move').setup() end)
 -- See also:
 -- - `:h MiniOperators-mappings` - overview of how mappings are created
 -- - `:h MiniOperators-overview` - overview of present operators
-later(function()
-  require('mini.operators').setup()
-
-  -- Create mappings for swapping adjacent arguments. Notes:
-  -- - Relies on `a` argument textobject from 'mini.ai'.
-  -- - It is not 100% reliable, but mostly works.
-  -- - It overrides `:h (` and `:h )`.
-  -- Explanation: `gx`-`ia`-`gx`-`ila` <=> exchange current and last argument
-  -- Usage: when on `a` in `(aa, bb)` press `)` followed by `(`.
-  vim.keymap.set('n', '(', 'gxiagxila', { remap = true, desc = 'Swap arg left' })
-  vim.keymap.set('n', ')', 'gxiagxina', { remap = true, desc = 'Swap arg right' })
-end)
+-- later(function()
+--   require('mini.operators').setup()
+--
+--   -- Create mappings for swapping adjacent arguments. Notes:
+--   -- - Relies on `a` argument textobject from 'mini.ai'.
+--   -- - It is not 100% reliable, but mostly works.
+--   -- - It overrides `:h (` and `:h )`.
+--   -- Explanation: `gx`-`ia`-`gx`-`ila` <=> exchange current and last argument
+--   -- Usage: when on `a` in `(aa, bb)` press `)` followed by `(`.
+--   vim.keymap.set('n', '(', 'gxiagxila', { remap = true, desc = 'Swap arg left' })
+--   vim.keymap.set('n', ')', 'gxiagxina', { remap = true, desc = 'Swap arg right' })
+-- end)
 
 -- Autopairs functionality. Insert pair when typing opening character and go over
 -- right character if it is already to cursor's right. Also provides mappings for

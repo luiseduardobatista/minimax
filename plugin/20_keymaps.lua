@@ -165,6 +165,7 @@ nmap_leader('fD', '<Cmd>Pick diagnostic scope="current"<CR>',   'Diagnostic buff
 nmap_leader('ff', '<Cmd>Pick files<CR>',                        'Files')
 nmap_leader('fg', '<Cmd>Pick grep_live<CR>',                    'Grep live')
 nmap_leader('fG', '<Cmd>Pick grep pattern="<cword>"<CR>',       'Grep current word')
+nmap_leader('fp', '<Cmd>Pick grep<CR>',                         'Grep (Pattern -> Fuzzy)')
 nmap_leader('fh', '<Cmd>Pick help<CR>',                         'Help tags')
 nmap_leader('fH', '<Cmd>Pick hl_groups<CR>',                    'Highlight groups')
 nmap_leader('fl', '<Cmd>Pick buf_lines scope="all"<CR>',        'Lines (all)')
@@ -210,15 +211,24 @@ xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 -- by an "replace" operator in 'mini.operators' (which is more commonly used).
 local formatting_cmd = '<Cmd>lua require("conform").format({lsp_fallback=true})<CR>'
 
-nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',     'Actions')
-nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',   'Diagnostic popup')
-nmap_leader('lf', formatting_cmd,                               'Format')
-nmap_leader('li', '<Cmd>lua vim.lsp.buf.implementation()<CR>',  'Implementation')
-nmap_leader('lh', '<Cmd>lua vim.lsp.buf.hover()<CR>',           'Hover')
-nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',          'Rename')
-nmap_leader('lR', '<Cmd>lua vim.lsp.buf.references()<CR>',      'References')
-nmap_leader('ls', '<Cmd>lua vim.lsp.buf.definition()<CR>',      'Source definition')
-nmap_leader('lt', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type definition')
+nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
+nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
+nmap_leader('lf', formatting_cmd,                                'Format')
+nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
+
+pcall(vim.keymap.del, 'n', 'grt')
+pcall(vim.keymap.del, 'n', 'gri')
+pcall(vim.keymap.del, 'n', 'grr')
+pcall(vim.keymap.del, 'n', 'gra')
+pcall(vim.keymap.del, 'n', 'grn')
+
+nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>',      'LSP Definition')
+nmap('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>',     'LSP Declaration')
+nmap('gr', '<Cmd>lua vim.lsp.buf.references()<CR>',      'LSP References')
+nmap('gI', '<Cmd>lua vim.lsp.buf.implementation()<CR>',  'LSP Implementation')
+nmap('gy', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', 'LSP Type Definition')
+nmap('K',  '<Cmd>lua vim.lsp.buf.hover()<CR>',           'LSP Hover')
+nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', 'LSP Signature Help')
 
 xmap_leader('lf', formatting_cmd, 'Format selection')
 
