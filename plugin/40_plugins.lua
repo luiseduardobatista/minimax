@@ -81,7 +81,6 @@ end)
 --
 -- Here Neovim itself is a client (see `:h vim.lsp`). Language servers need to
 -- be installed separately based on your OS, CLI tools, and preferences.
--- See note about 'mason.nvim' at the bottom of the file.
 --
 -- Neovim's team collects commonly used configurations for most language servers
 -- inside 'neovim/nvim-lspconfig' plugin.
@@ -95,6 +94,26 @@ now_if_args(function()
       client.server_capabilities.hoverProvider = false
     end,
   })
+
+  now_if_args(function()
+    add('williamboman/mason.nvim')
+    add('WhoIsSethDaniel/mason-tool-installer.nvim')
+    require('mason').setup()
+    require('mason-tool-installer').setup({
+      ensure_installed = {
+        -- LSP
+        'lua-language-server',
+        'gopls',
+        'ty',
+
+        -- Formatters/Linters
+        'stylua',
+        'gofumpt',
+        'ruff',
+        'alejandra',
+      },
+    })
+  end)
 
   -- Use `:h vim.lsp.enable()` to automatically enable language server based on
   -- the rules provided by 'nvim-lspconfig'.
@@ -145,36 +164,6 @@ end)
 -- 'mini.snippets' is designed to work with it as seamlessly as possible.
 -- See `:h MiniSnippets.gen_loader.from_lang()`.
 later(function() add('rafamadriz/friendly-snippets') end)
-
--- Honorable mentions =========================================================
-
--- 'mason-org/mason.nvim' (a.k.a. "Mason") is a great tool (package manager) for
--- installing external language servers, formatters, and linters. It provides
--- a unified interface for installing, updating, and deleting such programs.
---
--- The caveat is that these programs will be set up to be mostly used inside Neovim.
--- If you need them to work elsewhere, consider using other package managers.
---
--- You can use it like so:
-now_if_args(function()
-  add('williamboman/mason.nvim')
-  add('WhoIsSethDaniel/mason-tool-installer.nvim')
-  require('mason').setup()
-  require('mason-tool-installer').setup({
-    ensure_installed = {
-      -- LSP
-      'lua-language-server',
-      'gopls',
-      'ty',
-
-      -- Formatters/Linters
-      'stylua',
-      'gofumpt',
-      'ruff',
-      'alejandra',
-    },
-  })
-end)
 
 now_if_args(function() add('olexsmir/gopher.nvim') end, function()
   local gopher_loaded = false
