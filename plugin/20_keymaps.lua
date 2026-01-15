@@ -18,6 +18,11 @@ end
 -- Usage: `yiw` to yank a word and `]p` to put it on the next line.
 nmap('[p', '<Cmd>exe "put! " . v:register<CR>', 'Paste Above')
 nmap(']p', '<Cmd>exe "put "  . v:register<CR>', 'Paste Below')
+nmap('<C-d>', '<C-d>zz', 'Scroll Down & Center')
+nmap('<C-u>', '<C-u>zz', 'Scroll Up & Center')
+nmap('<C-t>', '<C-t>zz', 'Pop Tag & Center')
+nmap('<C-o>', '<C-o>zz', 'Jump Back & Center')
+nmap('<C-i>', '<C-i>zz', 'Jump Forward & Center')
 nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear highlight')
 
 -- Many general mappings are created by 'mini.basics'. See 'plugin/30_mini.lua'
