@@ -213,11 +213,10 @@ xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 -- NOTE: most LSP mappings represent a more structured way of replacing built-in
 -- LSP mappings (like `:h gra` and others). This is needed because `gr` is mapped
 -- by an "replace" operator in 'mini.operators' (which is more commonly used).
-local formatting_cmd = '<Cmd>lua require("conform").format({lsp_fallback=true})<CR>'
 
 nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
 nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
-nmap_leader('lf', formatting_cmd,                                'Format')
+nmap_leader('lf', '<Cmd>lua require("conform").format()<CR>',    'Format')
 nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
 
 pcall(vim.keymap.del, 'n', 'grt')
@@ -247,7 +246,7 @@ nmap('gr', function() vim.lsp.buf.references(nil, { on_list = on_list('reference
 nmap('K',  '<Cmd>lua vim.lsp.buf.hover()<CR>',           'LSP Hover')
 nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', 'LSP Signature Help')
 
-xmap_leader('lf', formatting_cmd, 'Format selection')
+xmap_leader('lf', '<Cmd>lua require("conform").format()<CR>', 'Format selection')
 
 -- m is for 'Map'. Common usage:
 -- - `<Leader>mt` - toggle map from 'mini.map' (closed by default)
