@@ -113,6 +113,7 @@ now_if_args(function()
         -- LSP
         'lua-language-server',
         'gopls',
+        'basedpyright',
         'ty',
 
         -- Formatters/Linters
@@ -130,7 +131,7 @@ now_if_args(function()
   -- Uncomment and tweak the following `vim.lsp.enable()` call to enable servers.
   vim.lsp.enable({
     'lua_ls',
-    'ty',
+    'basedpyright',
     'ruff',
     'gopls',
   })

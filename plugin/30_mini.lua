@@ -429,7 +429,15 @@ end)
 -- - `:h MiniDiff-overview` - overview of how module works
 -- - `:h MiniDiff-diff-summary` - available summary information
 -- - `:h MiniDiff.gen_source` - available built-in sources
-later(function() require('mini.diff').setup() end)
+later(function()
+  require('mini.diff').setup({
+    -- Uncomment the following code to disable line number highlight
+    -- view = {
+    --   style = 'sign',
+    --   signs = { add = '', change = '', delete = '' },
+    -- },
+  })
+end)
 
 -- Navigate and manipulate file system
 --
