@@ -220,7 +220,7 @@ later(function()
     -- always try to search only covering textobject and explicitly ask to search
     -- for next (`an`/`in`) or last (`al`/`il`).
     -- Try this. If you don't like it - delete next line and this comment.
-    search_method = 'cover',
+    -- search_method = 'cover',
   })
 end)
 
@@ -381,8 +381,8 @@ later(function() require('mini.comment').setup() end)
 -- when paired with 'mini.snippets' (which is set up in this file).
 later(function()
   -- Customize post-processing of LSP responses for a better user experience.
-  -- Don't show 'Text' suggestions (usually noisy) and show snippets last.
-  local process_items_opts = { kind_priority = { Text = -1, Snippet = 99 } }
+  -- Don't show 'Text' suggestions (usually noisy)
+  local process_items_opts = { kind_priority = { Text = -1 } }
   local process_items = function(items, base)
     return MiniCompletion.default_process_items(items, base, process_items_opts)
   end
@@ -779,7 +779,7 @@ later(function()
   -- By default snippets available at cursor are not shown as candidates in
   -- 'mini.completion' menu. This requires a dedicated in-process LSP server
   -- that will provide them. To have that, uncomment next line (use `gcc`).
-  -- MiniSnippets.start_lsp_server()
+  MiniSnippets.start_lsp_server()
 end)
 
 -- Split and join arguments (regions inside brackets between allowed separators).
