@@ -225,6 +225,7 @@ local on_list = function(scope)
   return function(opts)
     if #opts.items == 1 then
       vim.lsp.util.show_document(opts.items[1].user_data, 'utf-8')
+      vim.cmd('normal! zz')
     else
       require('mini.extra').pickers.lsp({ scope = scope })
     end
