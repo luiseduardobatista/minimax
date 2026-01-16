@@ -25,6 +25,18 @@ nmap('<C-o>', '<C-o>zz', 'Jump Back & Center')
 nmap('<C-i>', '<C-i>zz', 'Jump Forward & Center')
 nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear highlight')
 
+local map_expr = function(mode, lhs, rhs, desc)
+  vim.keymap.set(mode, lhs, rhs, { expr = true, desc = desc })
+end
+
+-- Saner behavior of n and N (https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n)
+map_expr('n', 'n', "'Nn'[v:searchforward].'zv'", 'Next Search Result')
+map_expr('x', 'n', "'Nn'[v:searchforward]", 'Next Search Result')
+map_expr('o', 'n', "'Nn'[v:searchforward]", 'Next Search Result')
+map_expr('n', 'N', "'nN'[v:searchforward].'zv'", 'Prev Search Result')
+map_expr('x', 'N', "'nN'[v:searchforward]", 'Prev Search Result')
+map_expr('o', 'N', "'nN'[v:searchforward]", 'Prev Search Result')
+
 -- Many general mappings are created by 'mini.basics'. See 'plugin/30_mini.lua'
 
 -- stylua: ignore start
@@ -60,7 +72,7 @@ _G.Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>e', desc = '+Explore/Edit' },
   { mode = 'n', keys = '<Leader>f', desc = '+Find' },
   { mode = 'n', keys = '<Leader>g', desc = '+Git' },
-  { mode = 'n', keys = '<Leader>l', desc = '+Language' },
+  -- { mode = 'n', keys = '<Leader>l', desc = '+Language' },
   { mode = 'n', keys = '<Leader>m', desc = '+Map' },
   { mode = 'n', keys = '<Leader>o', desc = '+Other' },
   { mode = 'n', keys = '<Leader>s', desc = '+Session' },
@@ -68,7 +80,7 @@ _G.Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>v', desc = '+Visits' },
 
   { mode = 'x', keys = '<Leader>g', desc = '+Git' },
-  { mode = 'x', keys = '<Leader>l', desc = '+Language' },
+  -- { mode = 'x', keys = '<Leader>l', desc = '+Language' },
 }
 
 -- Helpers for a more concise `<Leader>` mappings.
@@ -165,8 +177,8 @@ nmap_leader('fA', pick_added_hunks_buf,                         'Added hunks (bu
 nmap_leader('fb', '<Cmd>Pick buffers<CR>',                      'Buffers')
 nmap_leader('fc', '<Cmd>Pick git_commits<CR>',                  'Commits (all)')
 nmap_leader('fC', '<Cmd>Pick git_commits path="%"<CR>',         'Commits (buf)')
-nmap_leader('fd', '<Cmd>Pick diagnostic scope="all"<CR>',       'Diagnostic workspace')
-nmap_leader('fD', '<Cmd>Pick diagnostic scope="current"<CR>',   'Diagnostic buffer')
+nmap_leader('fd', '<Cmd>Pick diagnostic scope="current"<CR>',   'Diagnostic buffer')
+nmap_leader('fD', '<Cmd>Pick diagnostic scope="all"<CR>',       'Diagnostic workspace')
 nmap_leader('ff', '<Cmd>Pick files<CR>',                        'Files')
 nmap_leader('fg', '<Cmd>Pick grep_live<CR>',                    'Grep live')
 nmap_leader('fG', '<Cmd>Pick grep pattern="<cword>"<CR>',       'Grep current word')
@@ -246,7 +258,7 @@ nmap('gr', function() vim.lsp.buf.references(nil, { on_list = on_list('reference
 nmap('K',  '<Cmd>lua vim.lsp.buf.hover()<CR>',           'LSP Hover')
 nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', 'LSP Signature Help')
 
-xmap_leader('lf', '<Cmd>lua require("conform").format()<CR>', 'Format selection')
+xmap_leader('F', '<Cmd>lua require("conform").format()<CR>', 'Format selection')
 
 -- m is for 'Map'. Common usage:
 -- - `<Leader>mt` - toggle map from 'mini.map' (closed by default)
@@ -262,6 +274,8 @@ nmap_leader('mt', '<Cmd>lua MiniMap.toggle()<CR>',       'Toggle')
 nmap_leader('or', '<Cmd>lua MiniMisc.resize_window()<CR>', 'Resize to default width')
 nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>',    'Trim trailspace')
 nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>',          'Zoom toggle')
+nmap_leader('oe', ':DeleteBlankLines<CR>', 'Delete empty lines')
+xmap_leader('oe', ':DeleteBlankLines<CR>',   'Delete empty lines')
 
 -- s is for 'Session'. Common usage:
 -- - `<Leader>sn` - start new session

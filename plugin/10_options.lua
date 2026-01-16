@@ -22,6 +22,7 @@ vim.o.mouse       = 'a'            -- Enable mouse
 vim.o.mousescroll = 'ver:25,hor:6' -- Customize mouse scroll
 vim.o.switchbuf   = 'usetab'       -- Use already opened buffers when switching
 vim.o.undofile    = true           -- Enable persistent undo
+vim.o.updatetime = 200             -- Save swap file and trigger CursorHold
 
 vim.o.shada = "'100,<50,s10,:1000,/100,@100,h" -- Limit ShaDa file (for startup)
 
@@ -76,7 +77,7 @@ vim.o.spelloptions  = 'camel' -- Treat camelCase word parts as separate words
 vim.o.tabstop       = 2       -- Show tab as this number of spaces
 vim.o.virtualedit   = 'block' -- Allow going past end of line in blockwise mode
 vim.o.iskeyword = '@,48-57,_,192-255,-' -- Treat dash as `word` textobject part
-vim.o.clipboard = "unnamedplus"
+vim.o.clipboard = "unnamedplus" -- Share cliboard with system
 
 -- Pattern for a start of numbered list (used in `gw`). This reads as
 -- "Start of list item is: at least one special character (digit, -, +, *)
