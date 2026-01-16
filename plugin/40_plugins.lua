@@ -212,6 +212,18 @@ now_if_args(function()
   })
 end)
 
+later(
+  function()
+    add({
+      source = 'ThePrimeagen/refactoring.nvim',
+      depends = {
+        'nvim-lua/plenary.nvim',
+        'nvim-treesitter/nvim-treesitter',
+      },
+    })
+  end
+)
+
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.

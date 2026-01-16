@@ -23,7 +23,22 @@ function Config.delete_blank_lines(opts)
     vim.notify('Nenhuma linha vazia encontrada.', vim.log.levels.WARN)
   end
 end
+
 vim.api.nvim_create_user_command('DeleteBlankLines', Config.delete_blank_lines, {
   desc = 'Remove linhas em branco mantendo a posição relativa do cursor',
   range = true,
+})
+
+function Config.copy_buffer_content()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local content = table.concat(lines, '\n')
+  vim.fn.setreg('+', content)
+  vim.notify(
+    string.format('Copiadas %d linhas para o clipboard.', #lines),
+    vim.log.levels.INFO
+  )
+end
+
+vim.api.nvim_create_user_command('CopyBufferContent', Config.copy_buffer_content, {
+  desc = 'Copia o conteúdo do buffer sem mover a tela',
 })

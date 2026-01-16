@@ -88,11 +88,11 @@ _G.Config.leader_group_clues = {
 -- an attempt to be more concise yet descriptive. See `:h <Cmd>`.
 -- This approach also doesn't require the underlying commands/functions to exist
 -- during mapping creation: a "lazy loading" approach to improve startup time.
-local nmap_leader = function(suffix, rhs, desc)
-  vim.keymap.set('n', '<Leader>' .. suffix, rhs, { desc = desc })
+local nmap_leader = function(suffix, rhs, desc, expr)
+  vim.keymap.set('n', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr })
 end
-local xmap_leader = function(suffix, rhs, desc)
-  vim.keymap.set('x', '<Leader>' .. suffix, rhs, { desc = desc })
+local xmap_leader = function(suffix, rhs, desc, expr)
+  vim.keymap.set('x', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr })
 end
 
 -- b is for 'Buffer'. Common usage:
@@ -109,6 +109,7 @@ nmap_leader('bD', '<Cmd>lua MiniBufremove.delete(0, true)<CR>',  'Delete!')
 nmap_leader('bs', new_scratch_buffer,                            'Scratch')
 nmap_leader('bw', '<Cmd>lua MiniBufremove.wipeout()<CR>',        'Wipeout')
 nmap_leader('bW', '<Cmd>lua MiniBufremove.wipeout(0, true)<CR>', 'Wipeout!')
+nmap_leader('bc', '<Cmd>CopyBufferContent<CR>',                  'Copy buffer content')
 
 -- e is for 'Explore' and 'Edit'. Common usage:
 -- - `<Leader>ed` - open explorer at current working directory
@@ -156,7 +157,7 @@ local make_pick_recent = function(cwd, desc)
       return path_data.path ~= current_path
     end
     MiniExtra.pickers.visit_paths(
-      { cwd = cwd, sort = sort_recent, filter = filter_exclude_current }, 
+      { cwd = cwd, sort = sort_recent, filter = filter_exclude_current },
       { source = { name = desc } }
     )
   end
@@ -226,10 +227,10 @@ xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 -- LSP mappings (like `:h gra` and others). This is needed because `gr` is mapped
 -- by an "replace" operator in 'mini.operators' (which is more commonly used).
 
-nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
-nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
-nmap_leader('lf', '<Cmd>lua require("conform").format()<CR>',    'Format')
-nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
+nmap_leader('a', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
+nmap_leader('d', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
+nmap_leader('f', '<Cmd>lua require("conform").format()<CR>',    'Format')
+nmap_leader('r', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
 
 pcall(vim.keymap.del, 'n', 'grt')
 pcall(vim.keymap.del, 'n', 'gri')
@@ -310,4 +311,27 @@ nmap_leader('vv', '<Cmd>lua MiniVisits.add_label("core")<CR>',    'Add "core" la
 nmap_leader('vV', '<Cmd>lua MiniVisits.remove_label("core")<CR>', 'Remove "core" label')
 nmap_leader('vl', '<Cmd>lua MiniVisits.add_label()<CR>',          'Add label')
 nmap_leader('vL', '<Cmd>lua MiniVisits.remove_label()<CR>',       'Remove label')
+
+
+-- c is for 'Code'.
+
+-- Helper específico para Refactor com expr = true
+local refactor = function(type)
+  return function() require('refactoring').refactor(type) end
+end
+
+nmap_leader('cr', '<Cmd>lua require("refactoring").select_refactor()<CR>', 'Select Refactor')
+xmap_leader('cr', '<Cmd>lua require("refactoring").select_refactor()<CR>', 'Select Refactor')
+nmap_leader('ci', refactor('Inline Variable'),            'Inline variable',        true)
+xmap_leader('ci', refactor('Inline Variable'),            'Inline variable',        true)
+nmap_leader('cb', refactor('Extract Block'),              'Extract block',          true)
+nmap_leader('cB', refactor('Extract Block To File'),      'Extract block to file',  true)
+nmap_leader('ce', refactor('Extract Function'),           'Extract function',       true)
+xmap_leader('ce', refactor('Extract Function'),           'Extract function',       true)
+nmap_leader('cf', refactor('Extract Function To File'),   'Extract func to file',   true)
+xmap_leader('cf', refactor('Extract Function To File'),   'Extract func to file',   true)
+nmap_leader('cv', refactor('Extract Variable'),           'Extract variable',       true)
+xmap_leader('cv', refactor('Extract Variable'),           'Extract variable',       true)
+nmap_leader('cI', refactor('Inline Function'), 'Inline function', true)
+xmap_leader('cI', refactor('Inline Function'), 'Inline function', true)
 -- stylua: ignore end
