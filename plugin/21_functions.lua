@@ -83,8 +83,7 @@ function Config.remove_comments(opts)
   )
 
   local count = 0
-  -- teste
-  for _, edit in ipairs(edits) do -- teste
+  for _, edit in ipairs(edits) do
     local sr, sc, er, ec = unpack(edit)
 
     local line = vim.api.nvim_buf_get_lines(0, sr, sr + 1, false)[1] or ''
