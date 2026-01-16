@@ -130,17 +130,6 @@ now(function() require('mini.notify').setup() end)
 -- - `<Leader>sd` - delete previously started session
 now(function() require('mini.sessions').setup() end)
 
--- Start screen. This is what is shown when you open Neovim like `nvim`.
--- Example usage:
--- - Type prefix keys to limit available candidates
--- - Navigate down/up with `<C-n>` and `<C-p>`
--- - Press `<CR>` to select an entry
---
--- See also:
--- - `:h MiniStarter-example-config` - non-default config examples
--- - `:h MiniStarter-lifecycle` - how to work with Starter buffer
--- now(function() require('mini.starter').setup() end)
-
 -- Statusline. Sets `:h 'statusline'` to show more info in a line below window.
 -- Example usage:
 -- - Left most section indicates current mode (text + highlighting).
@@ -563,6 +552,18 @@ later(
 -- - `dt)` - *d*elete *t*ill next closing parenthesis (`)`)
 later(function() require('mini.jump').setup() end)
 
+-- Jump within visible lines to pre-defined spots via iterative label filtering.
+-- Spots are computed by a configurable spotter function. Example usage:
+-- - Lock eyes on desired location to jump
+-- - `<CR>` - start jumping; this shows character labels over target spots
+-- - Type character that appears over desired location; number of target spots
+--   should be reduced
+-- - Keep typing labels until target spot is unique to perform the jump
+--
+-- See also:
+-- - `:h MiniJump2d.gen_spotter` - list of available spotters
+later(function() require('mini.jump2d').setup() end)
+
 -- Special key mappings. Provides helpers to map:
 -- - Multi-step actions. Apply action 1 if condition is met; else apply
 --   action 2 if condition is met; etc.
@@ -683,6 +684,18 @@ later(function()
   require('mini.pick').setup({
     window = {
       config = win_config,
+    },
+    mappings = {
+      sys_paste = {
+        char = '<C-S-v>',
+        func = function()
+          vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes('<C-r>+', true, true, true),
+            'n',
+            true
+          )
+        end,
+      },
     },
   })
 end)
