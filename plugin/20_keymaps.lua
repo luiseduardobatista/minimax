@@ -277,6 +277,8 @@ nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>',    'Trim trailspace')
 nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>',          'Zoom toggle')
 nmap_leader('oe', ':DeleteBlankLines<CR>', 'Delete empty lines')
 xmap_leader('oe', ':DeleteBlankLines<CR>',   'Delete empty lines')
+nmap_leader('oc', '<Cmd>RemoveComments<CR>',               'Remove comments')
+xmap_leader('oc', ':RemoveComments<CR>',                   'Remove comments')
 
 -- s is for 'Session'. Common usage:
 -- - `<Leader>sn` - start new session
