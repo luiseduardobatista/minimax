@@ -229,7 +229,7 @@ xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 
 nmap_leader('a', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
 nmap_leader('d', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
-nmap_leader('f', '<Cmd>lua require("conform").format()<CR>',    'Format')
+nmap_leader('F', '<Cmd>lua require("conform").format()<CR>',    'Format')
 nmap_leader('r', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
 
 pcall(vim.keymap.del, 'n', 'grt')
