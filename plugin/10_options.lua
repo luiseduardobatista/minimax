@@ -111,8 +111,7 @@ local diagnostic_opts = {
   -- Show more details immediately for errors on the current line
   virtual_lines = false,
   virtual_text = {
-    current_line = true,
-    severity = { min = 'ERROR', max = 'ERROR' },
+    current_line = false,
   },
 
   -- Don't update diagnostics when typing

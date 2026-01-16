@@ -114,6 +114,7 @@ now_if_args(function()
         'lua-language-server',
         'gopls',
         'basedpyright',
+        'nil',
 
         -- Formatters/Linters
         'stylua',
@@ -133,6 +134,7 @@ now_if_args(function()
     'basedpyright',
     'ruff',
     'gopls',
+    'nil_ls',
   })
 end)
 
