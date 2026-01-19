@@ -88,11 +88,11 @@ _G.Config.leader_group_clues = {
 -- an attempt to be more concise yet descriptive. See `:h <Cmd>`.
 -- This approach also doesn't require the underlying commands/functions to exist
 -- during mapping creation: a "lazy loading" approach to improve startup time.
-local nmap_leader = function(suffix, rhs, desc, expr)
-  vim.keymap.set('n', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr })
+local nmap_leader = function(suffix, rhs, desc, expr, silent)
+  vim.keymap.set('n', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr, silent = silent or false})
 end
-local xmap_leader = function(suffix, rhs, desc, expr)
-  vim.keymap.set('x', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr })
+local xmap_leader = function(suffix, rhs, desc, expr, silent)
+  vim.keymap.set('x', '<Leader>' .. suffix, rhs, { desc = desc, expr = expr, silent = silent or false })
 end
 
 -- b is for 'Buffer'. Common usage:
@@ -109,7 +109,7 @@ nmap_leader('bD', '<Cmd>lua MiniBufremove.delete(0, true)<CR>',  'Delete!')
 nmap_leader('bs', new_scratch_buffer,                            'Scratch')
 nmap_leader('bw', '<Cmd>lua MiniBufremove.wipeout()<CR>',        'Wipeout')
 nmap_leader('bW', '<Cmd>lua MiniBufremove.wipeout(0, true)<CR>', 'Wipeout!')
-nmap_leader('bc', '<Cmd>CopyBufferContent<CR>',                  'Copy buffer content')
+nmap_leader('bc', '<Cmd>CopyBufferContent<CR>',                  'Copy buffer content', nil, true)
 
 -- e is for 'Explore' and 'Edit'. Common usage:
 -- - `<Leader>ed` - open explorer at current working directory
@@ -136,7 +136,7 @@ nmap_leader('en', '<Cmd>lua MiniNotify.show_history()<CR>', 'Notifications')
 nmap_leader('eo', edit_plugin_file('10_options.lua'),       'Options config')
 nmap_leader('ep', edit_plugin_file('40_plugins.lua'),       'Plugins config')
 nmap_leader('eq', explore_quickfix,                         'Quickfix list')
-nmap_leader('eQ', explore_locations,                        'Location list')
+nmap_leader('el', explore_locations,                        'Location list')
 
 -- f is for 'Fuzzy Find'. Common usage:
 -- - `<Leader>ff` - find files; for best performance requires `ripgrep`
