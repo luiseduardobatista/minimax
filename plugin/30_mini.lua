@@ -314,7 +314,7 @@ end)
 -- - Autocompletion. Basically an automated `:h cmdline-completion`.
 -- - Autocorrection of words as-you-type. Like `:W`->`:w`, `:lau`->`:lua`, etc.
 -- - Autopeek command range (like line number at the start) as-you-type.
-later(function() require('mini.cmdline').setup() end)
+-- later(function() require('mini.cmdline').setup() end)
 
 -- Tweak and save any color scheme. Contains utility functions to work with
 -- color spaces and color schemes. Example usage:
@@ -385,7 +385,7 @@ later(function() require('mini.comment').setup() end)
 --       process_items = process_items,
 --     },
 --   })
---
+--   --
 --   -- Set 'omnifunc' for LSP completion only when needed.
 --   local on_attach = function(ev)
 --     vim.bo[ev.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'

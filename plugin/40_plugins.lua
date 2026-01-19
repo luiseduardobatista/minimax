@@ -225,6 +225,26 @@ later(
 )
 
 later(function()
+  add('stevearc/quicker.nvim')
+  require('quicker').setup({
+    keys = {
+      {
+        '>',
+        function()
+          require('quicker').expand({ before = 2, after = 2, add_to_existing = true })
+        end,
+        desc = 'Expand quickfix context',
+      },
+      {
+        '<',
+        function() require('quicker').collapse() end,
+        desc = 'Collapse quickfix context',
+      },
+    },
+  })
+end)
+
+later(function()
   add({
     source = 'saghen/blink.cmp',
     depends = { 'rafamadriz/friendly-snippets' },
@@ -252,21 +272,31 @@ later(function()
       },
       documentation = {
         auto_show = true,
-        auto_show_delay_ms = 200,
       },
       ghost_text = {
         enabled = vim.g.ai_cmp,
       },
     },
     sources = {
-      default = { 'lsp', 'snippets', 'path', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
     cmdline = {
-      enabled = false,
+      keymap = {
+        preset = 'cmdline',
+      },
+      completion = {
+        list = { selection = { preselect = false } },
+        menu = {
+          auto_show = function(ctx) return vim.fn.getcmdtype() == ':' end,
+        },
+        ghost_text = { enabled = true },
+      },
     },
+    signature = { enabled = true },
     keymap = {
       preset = 'enter',
       ['<C-y>'] = { 'select_and_accept' },
+      ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
     },
   })
   vim.lsp.config('*', {
