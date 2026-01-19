@@ -314,7 +314,14 @@ end)
 -- - Autocompletion. Basically an automated `:h cmdline-completion`.
 -- - Autocorrection of words as-you-type. Like `:W`->`:w`, `:lau`->`:lua`, etc.
 -- - Autopeek command range (like line number at the start) as-you-type.
-later(function() require('mini.cmdline').setup() end)
+later(
+  function()
+    require('mini.cmdline').setup({
+      autocomplete = { enable = false },
+      autocorrect = { enable = true },
+    })
+  end
+)
 
 -- Tweak and save any color scheme. Contains utility functions to work with
 -- color spaces and color schemes. Example usage:
@@ -368,34 +375,34 @@ later(function() require('mini.comment').setup() end)
 --
 -- It also works with snippet candidates provided by LSP server. Best experience
 -- when paired with 'mini.snippets' (which is set up in this file).
-later(function()
-  -- Customize post-processing of LSP responses for a better user experience.
-  -- Don't show 'Text' suggestions (usually noisy)
-  local process_items_opts = { kind_priority = { Text = -1 } }
-  local process_items = function(items, base)
-    return MiniCompletion.default_process_items(items, base, process_items_opts)
-  end
-  require('mini.completion').setup({
-    lsp_completion = {
-      -- Without this config autocompletion is set up through `:h 'completefunc'`.
-      -- Although not needed, setting up through `:h 'omnifunc'` is cleaner
-      -- (sets up only when needed) and makes it possible to use `<C-u>`.
-      source_func = 'omnifunc',
-      auto_setup = false,
-      process_items = process_items,
-    },
-  })
-
-  -- Set 'omnifunc' for LSP completion only when needed.
-  local on_attach = function(ev)
-    vim.bo[ev.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
-  end
-  _G.Config.new_autocmd('LspAttach', nil, on_attach, "Set 'omnifunc'")
-
-  -- Advertise to servers that Neovim now supports certain set of completion and
-  -- signature features through 'mini.completion'.
-  vim.lsp.config('*', { capabilities = MiniCompletion.get_lsp_capabilities() })
-end)
+-- later(function()
+--   -- Customize post-processing of LSP responses for a better user experience.
+--   -- Don't show 'Text' suggestions (usually noisy)
+--   local process_items_opts = { kind_priority = { Text = -1 } }
+--   local process_items = function(items, base)
+--     return MiniCompletion.default_process_items(items, base, process_items_opts)
+--   end
+--   require('mini.completion').setup({
+--     lsp_completion = {
+--       -- Without this config autocompletion is set up through `:h 'completefunc'`.
+--       -- Although not needed, setting up through `:h 'omnifunc'` is cleaner
+--       -- (sets up only when needed) and makes it possible to use `<C-u>`.
+--       source_func = 'omnifunc',
+--       auto_setup = false,
+--       process_items = process_items,
+--     },
+--   })
+--   --
+--   -- Set 'omnifunc' for LSP completion only when needed.
+--   local on_attach = function(ev)
+--     vim.bo[ev.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
+--   end
+--   _G.Config.new_autocmd('LspAttach', nil, on_attach, "Set 'omnifunc'")
+--
+--   -- Advertise to servers that Neovim now supports certain set of completion and
+--   -- signature features through 'mini.completion'.
+--   vim.lsp.config('*', { capabilities = MiniCompletion.get_lsp_capabilities() })
+-- end)
 
 -- Autohighlight word under cursor with a customizable delay.
 -- Word boundaries are defined based on `:h 'iskeyword'` option.
@@ -457,7 +464,7 @@ end)
 -- - `:h MiniFiles-navigation` - more details about how to navigate
 -- - `:h MiniFiles-manipulation` - more details about how to manipulate
 -- - `:h MiniFiles-examples` - examples of common setups
-later(function()
+now(function()
   -- Enable directory/file preview
   require('mini.files').setup({
     windows = { preview = false },
@@ -562,7 +569,14 @@ later(function() require('mini.jump').setup() end)
 --
 -- See also:
 -- - `:h MiniJump2d.gen_spotter` - list of available spotters
-later(function() require('mini.jump2d').setup() end)
+later(function()
+  local jump2d = require('mini.jump2d')
+  jump2d.setup({
+    spotter = jump2d.gen_spotter.pattern('[^%s%p]+'),
+    labels = 'asdfghjkl;',
+    view = { dim = true, n_steps_ahead = 2 },
+  })
+end)
 
 -- Special key mappings. Provides helpers to map:
 -- - Multi-step actions. Apply action 1 if condition is met; else apply
@@ -582,9 +596,9 @@ later(function()
   MiniKeymap.map_multistep('i', '<S-Tab>', { 'pmenu_prev' })
   -- On `<CR>` try to accept current completion item, fall back to accounting
   -- for pairs from 'mini.pairs'
-  MiniKeymap.map_multistep('i', '<CR>', { 'pmenu_accept', 'minipairs_cr' })
+  -- MiniKeymap.map_multistep('i', '<CR>', { 'pmenu_accept', 'minipairs_cr' })
   -- On `<BS>` just try to account for pairs from 'mini.pairs'
-  MiniKeymap.map_multistep('i', '<BS>', { 'minipairs_bs' })
+  -- MiniKeymap.map_multistep('i', '<BS>', { 'minipairs_bs' })
 end)
 
 -- Move any selection in any direction. Example usage in Normal mode:

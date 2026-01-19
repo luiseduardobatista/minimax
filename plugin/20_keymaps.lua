@@ -121,10 +121,14 @@ local edit_plugin_file = function(filename)
 end
 local explore_at_file = '<Cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<CR>'
 local explore_quickfix = function()
-  vim.cmd(vim.fn.getqflist({ winid = true }).winid ~= 0 and 'cclose' or 'copen')
+  return vim.fn.getqflist({ winid = true }).winid ~= 0
+    and vim.cmd('cclose')
+    or vim.diagnostic.setqflist({ open = true, title = 'Workspace Diagnostics' })
 end
 local explore_locations = function()
-  vim.cmd(vim.fn.getloclist(0, { winid = true }).winid ~= 0 and 'lclose' or 'lopen')
+  return vim.fn.getloclist(0, { winid = true }).winid ~= 0
+    and vim.cmd('lclose')
+    or vim.diagnostic.setloclist({ open = true, title = 'Buffer Diagnostics' })
 end
 
 nmap_leader('ed', '<Cmd>lua MiniFiles.open()<CR>',          'Directory')

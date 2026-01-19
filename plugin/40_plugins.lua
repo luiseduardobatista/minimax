@@ -9,7 +9,7 @@
 -- Use this file to install and configure other such plugins.
 
 -- Make concise helpers for installing/adding plugins in two stages
-local add, later = MiniDeps.add, MiniDeps.later
+local add, later, now = MiniDeps.add, MiniDeps.later, MiniDeps.now
 local now_if_args = _G.Config.now_if_args
 
 -- Tree-sitter ================================================================
@@ -224,10 +224,97 @@ later(
   end
 )
 
+later(function()
+  add('stevearc/quicker.nvim')
+  require('quicker').setup({
+    keys = {
+      {
+        '>',
+        function()
+          require('quicker').expand({ before = 2, after = 2, add_to_existing = true })
+        end,
+        desc = 'Expand quickfix context',
+      },
+      {
+        '<',
+        function() require('quicker').collapse() end,
+        desc = 'Collapse quickfix context',
+      },
+    },
+  })
+end)
+
+later(function()
+  add({
+    source = 'saghen/blink.cmp',
+    depends = { 'rafamadriz/friendly-snippets' },
+    checkout = 'v1.8.0',
+  })
+  local blink = require('blink.cmp')
+  blink.setup({
+    snippets = {
+      preset = 'default',
+    },
+    appearance = {
+      use_nvim_cmp_as_default = false,
+      nerd_font_variant = 'mono',
+    },
+    completion = {
+      accept = {
+        auto_brackets = {
+          enabled = true,
+        },
+      },
+      menu = {
+        border = 'none',
+        draw = {
+          columns = { { 'label', 'label_description', gap = 1 }, { 'kind' } },
+          treesitter = { 'lsp' },
+        },
+      },
+      documentation = {
+        auto_show = true,
+        window = {
+          border = 'none',
+        },
+      },
+      ghost_text = {
+        enabled = vim.g.ai_cmp,
+      },
+    },
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+    cmdline = {
+      keymap = {
+        preset = 'cmdline',
+      },
+      completion = {
+        list = { selection = { preselect = false } },
+        menu = {
+          auto_show = function(ctx) return vim.fn.getcmdtype() == ':' end,
+        },
+        ghost_text = { enabled = true },
+      },
+    },
+    signature = { enabled = true },
+    keymap = {
+      preset = 'enter',
+      ['<C-y>'] = { 'select_and_accept' },
+      ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
+      ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
+    },
+  })
+  vim.lsp.config('*', {
+    capabilities = require('blink.cmp').get_lsp_capabilities(),
+  })
+end)
+
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
-MiniDeps.now(function()
+now(function()
   -- Install only those that you need
   add('rose-pine/neovim')
   add('vague-theme/vague.nvim')
