@@ -9,7 +9,7 @@
 -- Use this file to install and configure other such plugins.
 
 -- Make concise helpers for installing/adding plugins in two stages
-local add, later = MiniDeps.add, MiniDeps.later
+local add, later, now = MiniDeps.add, MiniDeps.later, MiniDeps.now
 local now_if_args = _G.Config.now_if_args
 
 -- Tree-sitter ================================================================
@@ -224,10 +224,60 @@ later(
   end
 )
 
+later(function()
+  add({
+    source = 'saghen/blink.cmp',
+    depends = { 'rafamadriz/friendly-snippets' },
+    checkout = 'v1.8.0',
+  })
+  local blink = require('blink.cmp')
+  blink.setup({
+    snippets = {
+      preset = 'default',
+    },
+    appearance = {
+      use_nvim_cmp_as_default = false,
+      nerd_font_variant = 'mono',
+    },
+    completion = {
+      accept = {
+        auto_brackets = {
+          enabled = true,
+        },
+      },
+      menu = {
+        draw = {
+          treesitter = { 'lsp' },
+        },
+      },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 200,
+      },
+      ghost_text = {
+        enabled = vim.g.ai_cmp,
+      },
+    },
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+    cmdline = {
+      enabled = false,
+    },
+    keymap = {
+      preset = 'enter',
+      ['<C-y>'] = { 'select_and_accept' },
+    },
+  })
+  vim.lsp.config('*', {
+    capabilities = require('blink.cmp').get_lsp_capabilities(),
+  })
+end)
+
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
-MiniDeps.now(function()
+now(function()
   -- Install only those that you need
   add('rose-pine/neovim')
   add('vague-theme/vague.nvim')
