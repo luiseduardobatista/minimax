@@ -121,4 +121,19 @@ local diagnostic_opts = {
 
 -- Use `later()` to avoid sourcing `vim.diagnostic` on startup
 MiniDeps.later(function() vim.diagnostic.config(diagnostic_opts) end)
+
+
+local disabled_built_ins = {
+  "gzip",
+  "netrw",
+  "netrwPlugin",
+  "tarPlugin",
+  "tohtml",
+  "zipPlugin",
+}
+
+for _, plugin in ipairs(disabled_built_ins) do
+  vim.g["loaded_" .. plugin] = 1
+end
+
 -- stylua: ignore end
