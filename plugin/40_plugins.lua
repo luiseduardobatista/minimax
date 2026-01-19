@@ -266,12 +266,17 @@ later(function()
         },
       },
       menu = {
+        border = 'none',
         draw = {
+          columns = { { 'label', 'label_description', gap = 1 }, { 'kind' } },
           treesitter = { 'lsp' },
         },
       },
       documentation = {
         auto_show = true,
+        window = {
+          border = 'none',
+        },
       },
       ghost_text = {
         enabled = vim.g.ai_cmp,
