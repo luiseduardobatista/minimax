@@ -302,6 +302,8 @@ later(function()
       preset = 'enter',
       ['<C-y>'] = { 'select_and_accept' },
       ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
+      ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
     },
   })
   vim.lsp.config('*', {
