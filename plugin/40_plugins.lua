@@ -259,7 +259,7 @@ later(function()
       },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'snippets', 'path', 'buffer' },
     },
     cmdline = {
       enabled = false,
