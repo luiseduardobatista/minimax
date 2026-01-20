@@ -115,6 +115,7 @@ now_if_args(function()
         'gopls',
         'basedpyright',
         'nil',
+        'ty',
 
         -- Formatters/Linters
         'stylua',
