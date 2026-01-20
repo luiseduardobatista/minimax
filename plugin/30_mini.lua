@@ -469,8 +469,10 @@ now(function()
   require('mini.files').setup({
     windows = { preview = false },
     mappings = {
-      go_in_plus = 'l',
-      go_out_plus = 'h',
+      go_in = '',
+      go_out = '',
+      go_in_plus = '<Right>',
+      go_out_plus = '<Left>',
       toggle_hidden = 'g.',
       reveal_cwd = '@',
       go_in_split = '<C-w>s',
