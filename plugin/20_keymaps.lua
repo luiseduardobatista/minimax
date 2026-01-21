@@ -28,7 +28,7 @@ nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear highlight')
 -- Window mappings ===========================================================
 nmap('<leader>-', '<C-W>s', 'Split Window Below')
 nmap('<leader>|', '<C-W>v', 'Split Window Right')
-nmap('<leader>wd', '<C-W>c', 'Delete Window')
+nmap('<leader>wd', '<C-W>c', 'Delete Current Window')
 
 local map_expr = function(mode, lhs, rhs, desc)
   vim.keymap.set(mode, lhs, rhs, { expr = true, desc = desc })
@@ -83,6 +83,7 @@ _G.Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>s', desc = '+Session' },
   { mode = 'n', keys = '<Leader>t', desc = '+Terminal' },
   { mode = 'n', keys = '<Leader>v', desc = '+Visits' },
+  { mode = 'n', keys = '<Leader>w', desc = '+Window' },
 
   { mode = 'x', keys = '<Leader>g', desc = '+Git' },
   -- { mode = 'x', keys = '<Leader>l', desc = '+Language' },
