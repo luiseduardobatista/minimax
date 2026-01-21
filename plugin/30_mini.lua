@@ -428,10 +428,10 @@ later(function() require('mini.comment').setup() end)
 later(function()
   require('mini.diff').setup({
     -- Uncomment the following code to disable line number highlight
-    -- view = {
-    --   style = 'sign',
-    --   signs = { add = '', change = '', delete = '' },
-    -- },
+    view = {
+      style = 'sign',
+      signs = { add = '', change = '', delete = '' },
+    },
   })
 end)
 
