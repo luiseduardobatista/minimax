@@ -25,6 +25,11 @@ nmap('<C-o>', '<C-o>zz', 'Jump Back & Center')
 nmap('<C-i>', '<C-i>zz', 'Jump Forward & Center')
 nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear highlight')
 
+-- Window mappings ===========================================================
+nmap('<leader>-', '<C-W>s', 'Split Window Below')
+nmap('<leader>|', '<C-W>v', 'Split Window Right')
+nmap('<leader>wd', '<C-W>c', 'Delete Window')
+
 local map_expr = function(mode, lhs, rhs, desc)
   vim.keymap.set(mode, lhs, rhs, { expr = true, desc = desc })
 end
