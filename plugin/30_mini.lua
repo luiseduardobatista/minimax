@@ -705,6 +705,11 @@ later(function()
     window = {
       config = win_config,
     },
+    source = {
+      preview = function(buf_id, item)
+        return MiniPick.default_preview(buf_id, item, { line_position = 'center' })
+      end,
+    },
     mappings = {
       sys_paste = {
         char = '<C-S-v>',

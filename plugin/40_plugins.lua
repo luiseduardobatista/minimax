@@ -270,21 +270,17 @@ later(function()
         border = 'none',
         draw = {
           columns = { { 'label', 'label_description', gap = 1 }, { 'kind' } },
-          treesitter = { 'lsp' },
         },
       },
       documentation = {
-        auto_show = true,
-        window = {
-          border = 'none',
-        },
+        auto_show = false,
       },
       ghost_text = {
         enabled = vim.g.ai_cmp,
       },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path', 'snippets' },
     },
     cmdline = {
       keymap = {
@@ -295,7 +291,6 @@ later(function()
         menu = {
           auto_show = function(ctx) return vim.fn.getcmdtype() == ':' end,
         },
-        ghost_text = { enabled = true },
       },
     },
     signature = { enabled = true },
@@ -342,7 +337,6 @@ end)
 now(function()
   -- Install only those that you need
   add('rose-pine/neovim')
-  add('vague-theme/vague.nvim')
   require('rose-pine').setup({
     styles = {
       bold = true,
@@ -350,10 +344,13 @@ now(function()
       transparency = true,
     },
   })
+
+  add('vague-theme/vague.nvim')
   require('vague').setup({
-    transparent = true,
+    transparent = false,
     italic = false,
   })
+
   vim.cmd('colorscheme vague')
   vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
 end)
