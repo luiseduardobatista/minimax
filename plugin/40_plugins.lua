@@ -269,14 +269,17 @@ later(function()
       menu = {
         border = 'none',
         draw = {
-          columns = { { 'label', 'label_description', gap = 1 }, { 'kind' } },
+          columns = {
+            { 'label', 'label_description', gap = 1 },
+            { 'kind_icon', 'kind', gap = 1 },
+          },
         },
       },
       documentation = {
         auto_show = false,
       },
       ghost_text = {
-        enabled = vim.g.ai_cmp,
+        enabled = true,
       },
     },
     sources = {
