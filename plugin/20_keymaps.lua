@@ -77,7 +77,7 @@ _G.Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>e', desc = '+Explore/Edit' },
   { mode = 'n', keys = '<Leader>f', desc = '+Find' },
   { mode = 'n', keys = '<Leader>g', desc = '+Git' },
-  -- { mode = 'n', keys = '<Leader>l', desc = '+Language' },
+  { mode = 'n', keys = '<Leader>l', desc = '+Language' },
   { mode = 'n', keys = '<Leader>m', desc = '+Map' },
   { mode = 'n', keys = '<Leader>o', desc = '+Other' },
   { mode = 'n', keys = '<Leader>s', desc = '+Session' },
@@ -86,7 +86,7 @@ _G.Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>w', desc = '+Window' },
 
   { mode = 'x', keys = '<Leader>g', desc = '+Git' },
-  -- { mode = 'x', keys = '<Leader>l', desc = '+Language' },
+  { mode = 'x', keys = '<Leader>l', desc = '+Language' },
 }
 
 -- Helpers for a more concise `<Leader>` mappings.
@@ -237,10 +237,10 @@ xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 -- LSP mappings (like `:h gra` and others). This is needed because `gr` is mapped
 -- by an "replace" operator in 'mini.operators' (which is more commonly used).
 
-nmap_leader('a', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
-nmap_leader('d', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
-nmap_leader('F', '<Cmd>lua require("conform").format()<CR>',    'Format')
-nmap_leader('r', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
+nmap_leader('la', '<Cmd>lua vim.lsp.buf.code_action()<CR>',      'Actions')
+nmap_leader('ld', '<Cmd>lua vim.diagnostic.open_float()<CR>',    'Diagnostic popup')
+nmap_leader('lf', '<Cmd>lua require("conform").format()<CR>',    'Format')
+nmap_leader('lr', '<Cmd>lua vim.lsp.buf.rename()<CR>',           'Rename')
 
 pcall(vim.keymap.del, 'n', 'grt')
 pcall(vim.keymap.del, 'n', 'gri')

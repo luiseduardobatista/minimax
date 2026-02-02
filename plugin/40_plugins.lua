@@ -98,10 +98,48 @@ end)
 now_if_args(function()
   add('neovim/nvim-lspconfig')
 
+  -- Salva todos os arquivos modificados automaticamente ao renomar algo
+  vim.lsp.handlers['textDocument/rename'] = function(err, result, ctx, config)
+    if err or not result then return end
+    local client = vim.lsp.get_client_by_id(ctx.client_id)
+    if client then
+      vim.lsp.util.apply_workspace_edit(result, client.offset_encoding or 'utf-8')
+      vim.schedule(function() vim.cmd('noautocmd silent! wa') end)
+    end
+  end
+
   vim.lsp.config('ruff', {
     on_attach = function(client, bufnr)
       client.server_capabilities.hoverProvider = false
     end,
+  })
+
+  vim.lsp.config('basedpyright', {
+    capabilities = {
+      offsetEncoding = { 'utf-8' },
+      general = { positionEncodings = { 'utf-8' } },
+    },
+    settings = {
+      basedpyright = {
+        disableOrganizeImports = true,
+        analysis = {
+          typeCheckingMode = 'recommended',
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = 'openFilesOnly',
+          autoImportCompletions = true,
+          inlayHints = {
+            callArgumentNames = true,
+            variableTypes = true,
+            functionReturnTypes = true,
+          },
+        },
+      },
+      python = {
+        venvPath = '.',
+        venv = '.venv',
+      },
+    },
   })
 
   now_if_args(function()
@@ -161,6 +199,7 @@ later(function()
       lua = { 'stylua' },
       nix = { 'alejandra' },
       python = { 'ruff_organize_imports', 'ruff_format' },
+      kdl = { 'kdlfmt' },
     },
     format_on_save = { lsp_fallback = true, timeout_ms = 500 },
   })
