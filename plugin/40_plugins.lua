@@ -292,21 +292,16 @@ later(function()
   })
   local blink = require('blink.cmp')
   blink.setup({
-    snippets = {
-      preset = 'default',
-    },
+    snippets = { preset = 'default' },
     appearance = {
       use_nvim_cmp_as_default = false,
       nerd_font_variant = 'mono',
     },
     completion = {
       accept = {
-        auto_brackets = {
-          enabled = true,
-        },
+        auto_brackets = { enabled = true },
       },
       menu = {
-        border = 'none',
         draw = {
           columns = {
             { 'label', 'label_description', gap = 1 },
@@ -314,20 +309,14 @@ later(function()
           },
         },
       },
-      documentation = {
-        auto_show = false,
-      },
-      ghost_text = {
-        enabled = true,
-      },
+      documentation = { auto_show = false },
+      ghost_text = { enabled = true },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets' },
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
     cmdline = {
-      keymap = {
-        preset = 'cmdline',
-      },
+      keymap = { preset = 'cmdline' },
       completion = {
         list = { selection = { preselect = false } },
         menu = {
@@ -335,7 +324,15 @@ later(function()
         },
       },
     },
-    signature = { enabled = true },
+    fuzzy = { implementation = 'prefer_rust_with_warning' },
+    signature = {
+      enabled = true,
+      trigger = {
+        show_on_insert = false,
+        show_on_insert_on_trigger_character = false,
+        show_on_trigger_character = false,
+      },
+    },
     keymap = {
       preset = 'enter',
       ['<C-y>'] = { 'select_and_accept' },

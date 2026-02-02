@@ -512,7 +512,7 @@ now(function()
   vim.api.nvim_create_autocmd('User', {
     pattern = 'MiniFilesBufferCreate',
     callback = function(args)
-      vim.keymap.set('n', '<Leader>ys', copy_file_to_clipboard, {
+      vim.keymap.set('n', '<Leader>yf', copy_file_to_clipboard, {
         buffer = args.data.buf_id,
         desc = 'Copy file object (system clipboard)',
       })
