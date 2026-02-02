@@ -107,3 +107,14 @@ vim.api.nvim_create_user_command('RemoveComments', Config.remove_comments, {
   desc = 'Remove comentários',
   range = '%',
 })
+
+function Config.clean_code(opts)
+  Config.remove_comments(opts)
+  Config.delete_blank_lines(opts)
+  vim.notify('Limpeza completa concluída.', vim.log.levels.INFO)
+end
+
+vim.api.nvim_create_user_command('CleanCode', Config.clean_code, {
+  desc = 'Remove comentários E linhas vazias',
+  range = '%',
+})

@@ -289,6 +289,8 @@ nmap_leader('oe', ':DeleteBlankLines<CR>', 'Delete empty lines')
 xmap_leader('oe', ':DeleteBlankLines<CR>',   'Delete empty lines')
 nmap_leader('oc', '<Cmd>RemoveComments<CR>',               'Remove comments')
 xmap_leader('oc', ':RemoveComments<CR>',                   'Remove comments')
+nmap_leader('oa', '<Cmd>CleanCode<CR>', 'Remove comments & empty lines')
+xmap_leader('oa', ':CleanCode<CR>',     'Remove comments & empty lines')
 
 -- s is for 'Session'. Common usage:
 -- - `<Leader>sn` - start new session
