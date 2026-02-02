@@ -482,6 +482,34 @@ now(function()
     },
   })
 
+  local copy_file_to_clipboard = function()
+    local entry = MiniFiles.get_fs_entry()
+    if entry then
+      local path = entry.path
+      local uri = 'file://' .. path
+      local cmd = { 'wl-copy', '--type', 'text/uri-list', uri }
+      vim.fn.system(cmd)
+      if vim.v.shell_error == 0 then
+        vim.notify(
+          'Arquivo copiado: ' .. vim.fn.fnamemodify(path, ':t'),
+          vim.log.levels.INFO
+        )
+      else
+        vim.notify('Erro ao copiar (wl-copy instalado?)', vim.log.levels.ERROR)
+      end
+    end
+  end
+
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'MiniFilesBufferCreate',
+    callback = function(args)
+      vim.keymap.set('n', 'ys', copy_file_to_clipboard, {
+        buffer = args.data.buf_id,
+        desc = 'Copy file object (system clipboard)',
+      })
+    end,
+  })
+
   -- Add common bookmarks for every explorer. Example usage inside explorer:
   -- - `'c` to navigate into your config directory
   -- - `g?` to see available bookmarks
@@ -768,32 +796,32 @@ end)
 -- - `:h MiniSnippets-examples` - examples of common setups
 -- - `:h MiniSnippets-session` - details about snippet session
 -- - `:h MiniSnippets.gen_loader` - list of available loaders
-later(function()
-  -- Define language patterns to work better with 'friendly-snippets'
-  local latex_patterns = { 'latex/**/*.json', '**/latex.json' }
-  local lang_patterns = {
-    tex = latex_patterns,
-    plaintex = latex_patterns,
-    -- Recognize special injected language of markdown tree-sitter parser
-    markdown_inline = { 'markdown.json' },
-  }
-
-  local snippets = require('mini.snippets')
-  local config_path = vim.fn.stdpath('config')
-  snippets.setup({
-    snippets = {
-      -- Always load 'snippets/global.json' from config directory
-      snippets.gen_loader.from_file(config_path .. '/snippets/global.json'),
-      -- Load from 'snippets/' directory of plugins, like 'friendly-snippets'
-      snippets.gen_loader.from_lang({ lang_patterns = lang_patterns }),
-    },
-  })
-
-  -- By default snippets available at cursor are not shown as candidates in
-  -- 'mini.completion' menu. This requires a dedicated in-process LSP server
-  -- that will provide them. To have that, uncomment next line (use `gcc`).
-  MiniSnippets.start_lsp_server()
-end)
+-- later(function()
+--   -- Define language patterns to work better with 'friendly-snippets'
+--   local latex_patterns = { 'latex/**/*.json', '**/latex.json' }
+--   local lang_patterns = {
+--     tex = latex_patterns,
+--     plaintex = latex_patterns,
+--     -- Recognize special injected language of markdown tree-sitter parser
+--     markdown_inline = { 'markdown.json' },
+--   }
+--
+--   local snippets = require('mini.snippets')
+--   local config_path = vim.fn.stdpath('config')
+--   snippets.setup({
+--     snippets = {
+--       -- Always load 'snippets/global.json' from config directory
+--       snippets.gen_loader.from_file(config_path .. '/snippets/global.json'),
+--       -- Load from 'snippets/' directory of plugins, like 'friendly-snippets'
+--       snippets.gen_loader.from_lang({ lang_patterns = lang_patterns }),
+--     },
+--   })
+--
+--   -- By default snippets available at cursor are not shown as candidates in
+--   -- 'mini.completion' menu. This requires a dedicated in-process LSP server
+--   -- that will provide them. To have that, uncomment next line (use `gcc`).
+--   MiniSnippets.start_lsp_server()
+-- end)
 
 -- Split and join arguments (regions inside brackets between allowed separators).
 -- It uses Lua patterns to find arguments, which means it works in comments and
