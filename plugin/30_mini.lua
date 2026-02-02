@@ -500,13 +500,28 @@ now(function()
     end
   end
 
+  local copy_dir_path = function()
+    local entry = MiniFiles.get_fs_entry()
+    if not entry then return end
+    local dir_path = (entry.fs_type == 'directory') and entry.path
+      or vim.fn.fnamemodify(entry.path, ':h')
+    vim.fn.setreg('+', dir_path)
+    vim.notify('Path copiado: ' .. dir_path, vim.log.levels.INFO)
+  end
+
   vim.api.nvim_create_autocmd('User', {
     pattern = 'MiniFilesBufferCreate',
     callback = function(args)
-      vim.keymap.set('n', 'ys', copy_file_to_clipboard, {
+      vim.keymap.set('n', '<Leader>ys', copy_file_to_clipboard, {
         buffer = args.data.buf_id,
         desc = 'Copy file object (system clipboard)',
       })
+      vim.keymap.set(
+        'n',
+        '<Leader>yp',
+        copy_dir_path,
+        { buffer = buf_id, desc = 'Copy directory path' }
+      )
     end,
   })
 
