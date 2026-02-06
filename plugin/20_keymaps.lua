@@ -300,7 +300,9 @@ local session_new = 'MiniSessions.write(vim.fn.input("Session name: "))'
 
 nmap_leader('sd', '<Cmd>lua MiniSessions.select("delete")<CR>', 'Delete')
 nmap_leader('sn', '<Cmd>lua ' .. session_new .. '<CR>',         'New')
-nmap_leader('sr', '<Cmd>lua MiniSessions.select("read")<CR>',   'Read')
+nmap_leader('sl', '<Cmd>lua MiniSessions.write("Session.vim")<CR>', 'Save Local')
+nmap_leader('sr', '<Cmd>lua MiniSessions.read("Session.vim")<CR>',   'Read local')
+nmap_leader('sR', '<Cmd>lua MiniSessions.select("read")<CR>',   'Read')
 nmap_leader('sw', '<Cmd>lua MiniSessions.write()<CR>',          'Write current')
 
 -- t is for 'Terminal'

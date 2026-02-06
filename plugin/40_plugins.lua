@@ -199,7 +199,6 @@ later(function()
       lua = { 'stylua' },
       nix = { 'alejandra' },
       python = { 'ruff_organize_imports', 'ruff_format' },
-      kdl = { 'kdlfmt' },
     },
     format_on_save = { lsp_fallback = true, timeout_ms = 500 },
   })
@@ -302,12 +301,12 @@ later(function()
         auto_brackets = { enabled = true },
       },
       menu = {
-        draw = {
-          columns = {
-            { 'label', 'label_description', gap = 1 },
-            { 'kind_icon', 'kind', gap = 1 },
-          },
-        },
+        -- draw = {
+        --   columns = {
+        --     -- { 'label', 'label_description', gap = 1 },
+        --     -- { 'kind_icon', 'kind', gap = 1 },
+        --   },
+        -- },
       },
       documentation = { auto_show = false },
       ghost_text = { enabled = true },
@@ -336,7 +335,13 @@ later(function()
     keymap = {
       preset = 'enter',
       ['<C-y>'] = { 'select_and_accept' },
-      ['<C-d>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+      ['<C-u>'] = { 'scroll_signature_up', 'scroll_documentation_up', 'fallback' },
+      ['<C-d>'] = {
+        'scroll_signature_down',
+        'scroll_documentation_down',
+        'fallback',
+      },
       ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
       ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
     },
@@ -353,10 +358,10 @@ now(function()
   -- resizing splits
   -- these keymaps will also accept a range,
   -- for example `10<A-h>` will `resize_left` by `(10 * config.default_amount)`
-  vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
-  vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
-  vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
-  vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+  vim.keymap.set('n', '<C-S-h>', require('smart-splits').resize_left)
+  vim.keymap.set('n', '<C-S-j>', require('smart-splits').resize_down)
+  vim.keymap.set('n', '<C-S-k>', require('smart-splits').resize_up)
+  vim.keymap.set('n', '<C-S-l>', require('smart-splits').resize_right)
   -- moving between splits
   vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
   vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
@@ -370,20 +375,7 @@ now(function()
   vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 end)
 
--- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
--- have full support of its highlight groups. Use if you don't like 'miniwinter'
--- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
 now(function()
-  -- Install only those that you need
-  add('rose-pine/neovim')
-  require('rose-pine').setup({
-    styles = {
-      bold = true,
-      italic = false,
-      transparency = true,
-    },
-  })
-
   add('vague-theme/vague.nvim')
   require('vague').setup({
     transparent = false,
