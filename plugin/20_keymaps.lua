@@ -173,13 +173,6 @@ local make_pick_recent = function(cwd, desc)
   end
 end
 
-local safe_resume = function()
-  local success = pcall(MiniPick.resume)
-  if not success then
-    vim.notify('Nenhum picker anterior para resumir.', vim.log.levels.WARN)
-  end
-end
-
 
 nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>',            '"/" history')
 nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>',            '":" history')
@@ -200,7 +193,7 @@ nmap_leader('fl', '<Cmd>Pick buf_lines scope="all"<CR>',        'Lines (all)')
 nmap_leader('fL', '<Cmd>Pick buf_lines scope="current"<CR>',    'Lines (buf)')
 nmap_leader('fm', '<Cmd>Pick git_hunks<CR>',                    'Modified hunks (all)')
 nmap_leader('fM', '<Cmd>Pick git_hunks path="%"<CR>',           'Modified hunks (buf)')
-nmap_leader('fr', safe_resume,                       'Resume')
+nmap_leader('fr', function() return pcall(vim.cmd, 'Pick resume') or vim.notify('Nada para resumir') end, 'Resume')
 nmap_leader('fs', pick_workspace_symbols_live,                  'Symbols workspace (live)')
 nmap_leader('fS', '<Cmd>Pick lsp scope="document_symbol"<CR>',  'Symbols document')
 nmap_leader('fv', make_pick_recent(nil, 'Visit paths (cwd/recent)'), 'Visit paths (cwd)')
