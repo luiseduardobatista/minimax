@@ -240,6 +240,7 @@ pcall(vim.keymap.del, 'n', 'gri')
 pcall(vim.keymap.del, 'n', 'grr')
 pcall(vim.keymap.del, 'n', 'gra')
 pcall(vim.keymap.del, 'n', 'grn')
+pcall(vim.keymap.del, 'n', 'grx')
 
 local on_list = function(scope)
   return function(opts)
