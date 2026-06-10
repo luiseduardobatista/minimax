@@ -198,6 +198,7 @@ later(function()
       lua = { 'stylua' },
       nix = { 'alejandra' },
       python = { 'ruff_organize_imports', 'ruff_format' },
+      go = { 'gofmt' },
     },
     format_on_save = { lsp_fallback = true, timeout_ms = 500 },
   })
@@ -240,7 +241,13 @@ now_if_args(function()
     explorer = { enabled = false },
     indent = { enabled = false },
     input = { enabled = false },
-    picker = { enabled = false },
+    picker = {
+      enabled = false,
+      layout = {
+        preset = 'default',
+        preview = false,
+      },
+    },
     notifier = { enabled = false },
     quickfile = { enabled = false },
     scope = { enabled = false },
@@ -255,6 +262,7 @@ later(
     add({
       source = 'ThePrimeagen/refactoring.nvim',
       depends = {
+        'lewis6991/async.nvim',
         'nvim-lua/plenary.nvim',
         'nvim-treesitter/nvim-treesitter',
       },
@@ -286,28 +294,24 @@ later(function()
   add({
     source = 'saghen/blink.cmp',
     depends = { 'rafamadriz/friendly-snippets' },
-    checkout = 'v1.8.0',
+    checkout = 'v1.10.2',
   })
   local blink = require('blink.cmp')
   blink.setup({
-    snippets = { preset = 'default' },
-    appearance = {
-      use_nvim_cmp_as_default = false,
-      nerd_font_variant = 'mono',
-    },
     completion = {
       accept = {
         auto_brackets = { enabled = true },
       },
       menu = {
-        -- draw = {
-        --   columns = {
-        --     -- { 'label', 'label_description', gap = 1 },
-        --     -- { 'kind_icon', 'kind', gap = 1 },
-        --   },
-        -- },
+        draw = {
+          treesitter = { 'lsp' },
+          columns = {
+            { 'label', 'label_description', gap = 1 },
+            { 'kind' },
+          },
+        },
       },
-      documentation = { auto_show = false },
+      documentation = { auto_show = true, auto_show_delay_ms = 500 },
       ghost_text = { enabled = true },
     },
     sources = {
@@ -345,9 +349,6 @@ later(function()
       ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
     },
   })
-  vim.lsp.config('*', {
-    capabilities = require('blink.cmp').get_lsp_capabilities(),
-  })
 end)
 
 now(function()
@@ -374,13 +375,72 @@ now(function()
   vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 end)
 
+later(function()
+  add('folke/sidekick.nvim')
+  require('sidekick').setup({
+    -- add any options here
+    cli = {
+      mux = {
+        backend = 'zellij',
+        enabled = true,
+      },
+    },
+  })
+
+  -- Default sidekick.nvim keybinds
+  -- stylua: ignore start
+  vim.keymap.set({ 'i', 'n' }, '<tab>', function()
+    if require('sidekick').nes_jump_or_apply() then return end
+    return '<tab>'
+  end, { expr = true, desc = 'Goto/Apply Next Edit Suggestion' })
+
+  vim.keymap.set({ 'n', 't', 'i', 'x' }, '<c-.>', function()
+    require('sidekick.cli').focus()
+  end, { desc = 'Sidekick Focus' })
+
+  vim.keymap.set('n', '<leader>aa', function()
+    require('sidekick.cli').toggle()
+  end, { desc = 'Sidekick Toggle CLI' })
+
+  vim.keymap.set('n', '<leader>as', function()
+    require('sidekick.cli').select()
+  end, { desc = 'Select CLI' })
+
+  vim.keymap.set('n', '<leader>ad', function()
+    require('sidekick.cli').close()
+  end, { desc = 'Detach a CLI Session' })
+
+  vim.keymap.set({ 'x', 'n' }, '<leader>at', function()
+    require('sidekick.cli').send({ msg = '{this}' })
+  end, { desc = 'Send This' })
+
+  vim.keymap.set('n', '<leader>af', function()
+    require('sidekick.cli').send({ msg = '{file}' })
+  end, { desc = 'Send File' })
+
+  vim.keymap.set('x', '<leader>av', function()
+    require('sidekick.cli').send({ msg = '{selection}' })
+  end, { desc = 'Send Visual Selection' })
+
+  vim.keymap.set({ 'n', 'x' }, '<leader>ap', function()
+    require('sidekick.cli').prompt()
+  end, { desc = 'Sidekick Select Prompt' })
+
+  vim.keymap.set('n', '<leader>ac', function()
+    require('sidekick.cli').toggle({ name = 'pi', focus = true })
+  end, { desc = 'Sidekick Toggle Pi' })
+  -- stylua: ignore end
+end)
+
 now(function()
   add('vague-theme/vague.nvim')
   require('vague').setup({
-    transparent = false,
     italic = false,
   })
 
-  vim.cmd('colorscheme vague')
-  vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
+  add('webhooked/kanso.nvim')
+  add('aktersnurra/no-clown-fiesta.nvim')
+
+  vim.cmd('colorscheme kanso-zen')
+  -- vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
 end)
