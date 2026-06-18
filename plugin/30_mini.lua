@@ -84,7 +84,7 @@ now(function()
   later(MiniIcons.mock_nvim_web_devicons)
 
   -- Add LSP kind icons. Useful for 'mini.completion'.
-  later(MiniIcons.tweak_lsp_kind)
+  -- later(MiniIcons.tweak_lsp_kind)
 end)
 
 -- Miscellaneous small but useful functions. Example usage:
@@ -317,25 +317,12 @@ end)
 later(
   function()
     require('mini.cmdline').setup({
-      autocomplete = { enable = false },
+      autocomplete = { enable = true },
       autocorrect = { enable = true },
+      autopeek = { enable = false },
     })
   end
 )
-
--- Tweak and save any color scheme. Contains utility functions to work with
--- color spaces and color schemes. Example usage:
--- - `:Colorscheme default` - switch with animation to the default color scheme
---
--- See also:
--- - `:h MiniColors.interactive()` - interactively tweak color scheme
--- - `:h MiniColors-recipes` - common recipes to use during interactive tweaking
--- - `:h MiniColors.convert()` - convert between color spaces
--- - `:h MiniColors-color-spaces` - list of supported color sapces
---
--- It is not enabled by default because it is not really needed on a daily basis.
--- Uncomment next line (use `gcc`) to enable.
--- later(function() require('mini.colors').setup() end)
 
 -- Comment lines. Provides functionality to work with commented lines.
 -- Uses `:h 'commentstring'` option to infer comment structure.
@@ -348,37 +335,10 @@ later(
 -- still enabled as it provides more customization opportunities.
 later(function() require('mini.comment').setup() end)
 
--- Completion and signature help. Implements async "two stage" autocompletion:
--- - Based on attached LSP servers that support completion.
--- - Fallback (based on built-in keyword completion) if there is no LSP candidates.
---
--- Example usage in Insert mode with attached LSP:
--- - Start typing text that should be recognized by LSP (like variable name).
--- - After 100ms a popup menu with candidates appears.
--- - Press `<Tab>` / `<S-Tab>` to navigate down/up the list. These are set up
---   in 'mini.keymap'. You can also use `<C-n>` / `<C-p>`.
--- - During navigation there is an info window to the right showing extra info
---   that the LSP server can provide about the candidate. It appears after the
---   candidate stays selected for 100ms. Use `<C-f>` / `<C-b>` to scroll it.
--- - Navigating to an entry also changes buffer text. If you are happy with it,
---   keep typing after it. To discard completion completely, press `<C-e>`.
--- - After pressing special trigger(s), usually `(`, a window appears that shows
---   the signature of the current function/method. It gets updated as you type
---   showing the currently active parameter.
---
--- Example usage in Insert mode without an attached LSP or in places not
--- supported by the LSP (like comments):
--- - Start typing a word that is present in current or opened buffers.
--- - After 100ms popup menu with candidates appears.
--- - Navigate with `<Tab>` / `<S-Tab>` or `<C-n>` / `<C-p>`. This also updates
---   buffer text. If happy with choice, keep typing. Stop with `<C-e>`.
---
--- It also works with snippet candidates provided by LSP server. Best experience
--- when paired with 'mini.snippets' (which is set up in this file).
 -- later(function()
 --   -- Customize post-processing of LSP responses for a better user experience.
 --   -- Don't show 'Text' suggestions (usually noisy)
---   local process_items_opts = { kind_priority = { Text = -1 } }
+--   local process_items_opts = { kind_priority = { Text = -1, Snippet = 99 } }
 --   local process_items = function(items, base)
 --     return MiniCompletion.default_process_items(items, base, process_items_opts)
 --   end
@@ -811,32 +771,32 @@ end)
 -- - `:h MiniSnippets-examples` - examples of common setups
 -- - `:h MiniSnippets-session` - details about snippet session
 -- - `:h MiniSnippets.gen_loader` - list of available loaders
--- later(function()
---   -- Define language patterns to work better with 'friendly-snippets'
---   local latex_patterns = { 'latex/**/*.json', '**/latex.json' }
---   local lang_patterns = {
---     tex = latex_patterns,
---     plaintex = latex_patterns,
---     -- Recognize special injected language of markdown tree-sitter parser
---     markdown_inline = { 'markdown.json' },
---   }
---
---   local snippets = require('mini.snippets')
---   local config_path = vim.fn.stdpath('config')
---   snippets.setup({
---     snippets = {
---       -- Always load 'snippets/global.json' from config directory
---       snippets.gen_loader.from_file(config_path .. '/snippets/global.json'),
---       -- Load from 'snippets/' directory of plugins, like 'friendly-snippets'
---       snippets.gen_loader.from_lang({ lang_patterns = lang_patterns }),
---     },
---   })
---
---   -- By default snippets available at cursor are not shown as candidates in
---   -- 'mini.completion' menu. This requires a dedicated in-process LSP server
---   -- that will provide them. To have that, uncomment next line (use `gcc`).
---   MiniSnippets.start_lsp_server()
--- end)
+later(function()
+  -- Define language patterns to work better with 'friendly-snippets'
+  local latex_patterns = { 'latex/**/*.json', '**/latex.json' }
+  local lang_patterns = {
+    tex = latex_patterns,
+    plaintex = latex_patterns,
+    -- Recognize special injected language of markdown tree-sitter parser
+    markdown_inline = { 'markdown.json' },
+  }
+
+  local snippets = require('mini.snippets')
+  local config_path = vim.fn.stdpath('config')
+  snippets.setup({
+    snippets = {
+      -- Always load 'snippets/global.json' from config directory
+      snippets.gen_loader.from_file(config_path .. '/snippets/global.json'),
+      -- Load from 'snippets/' directory of plugins, like 'friendly-snippets'
+      snippets.gen_loader.from_lang({ lang_patterns = lang_patterns }),
+    },
+  })
+
+  -- By default snippets available at cursor are not shown as candidates in
+  -- 'mini.completion' menu. This requires a dedicated in-process LSP server
+  -- that will provide them. To have that, uncomment next line (use `gcc`).
+  MiniSnippets.start_lsp_server()
+end)
 
 -- Split and join arguments (regions inside brackets between allowed separators).
 -- It uses Lua patterns to find arguments, which means it works in comments and

@@ -199,6 +199,7 @@ later(function()
       nix = { 'alejandra' },
       python = { 'ruff_organize_imports', 'ruff_format' },
       go = { 'gofmt' },
+      kdl = { 'kdlfmt' },
     },
     format_on_save = { lsp_fallback = true, timeout_ms = 500 },
   })
@@ -303,6 +304,7 @@ later(function()
         auto_brackets = { enabled = true },
       },
       menu = {
+        border = 'none',
         draw = {
           treesitter = { 'lsp' },
           columns = {
@@ -317,36 +319,25 @@ later(function()
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
-    cmdline = {
-      keymap = { preset = 'cmdline' },
-      completion = {
-        list = { selection = { preselect = false } },
-        menu = {
-          auto_show = function(ctx) return vim.fn.getcmdtype() == ':' end,
-        },
-      },
-    },
+    cmdline = { enabled = false },
     fuzzy = { implementation = 'prefer_rust_with_warning' },
     signature = {
       enabled = true,
-      trigger = {
-        show_on_insert = false,
-        show_on_insert_on_trigger_character = false,
-        show_on_trigger_character = false,
-      },
+      -- trigger = {
+      --   show_on_insert = false,
+      --   show_on_insert_on_trigger_character = false,
+      --   show_on_trigger_character = false,
+      -- },
     },
     keymap = {
       preset = 'enter',
       ['<C-y>'] = { 'select_and_accept' },
-      ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
       ['<C-u>'] = { 'scroll_signature_up', 'scroll_documentation_up', 'fallback' },
       ['<C-d>'] = {
         'scroll_signature_down',
         'scroll_documentation_down',
         'fallback',
       },
-      ['<Tab>'] = { 'snippet_forward', 'select_next', 'fallback' },
-      ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
     },
   })
 end)
@@ -378,57 +369,82 @@ end)
 later(function()
   add('folke/sidekick.nvim')
   require('sidekick').setup({
-    -- add any options here
     cli = {
       mux = {
-        backend = 'zellij',
+        backend = 'tmux',
         enabled = true,
+        create = 'terminal',
       },
     },
   })
 
-  -- Default sidekick.nvim keybinds
-  -- stylua: ignore start
   vim.keymap.set({ 'i', 'n' }, '<tab>', function()
     if require('sidekick').nes_jump_or_apply() then return end
     return '<tab>'
   end, { expr = true, desc = 'Goto/Apply Next Edit Suggestion' })
 
-  vim.keymap.set({ 'n', 't', 'i', 'x' }, '<c-.>', function()
-    require('sidekick.cli').focus()
-  end, { desc = 'Sidekick Focus' })
+  vim.keymap.set(
+    { 'n', 't', 'i', 'x' },
+    '<c-.>',
+    function() require('sidekick.cli').focus() end,
+    { desc = 'Sidekick Focus' }
+  )
 
-  vim.keymap.set('n', '<leader>aa', function()
-    require('sidekick.cli').toggle()
-  end, { desc = 'Sidekick Toggle CLI' })
+  vim.keymap.set(
+    'n',
+    '<leader>aa',
+    function() require('sidekick.cli').toggle() end,
+    { desc = 'Sidekick Toggle CLI' }
+  )
 
-  vim.keymap.set('n', '<leader>as', function()
-    require('sidekick.cli').select()
-  end, { desc = 'Select CLI' })
+  vim.keymap.set(
+    'n',
+    '<leader>as',
+    function() require('sidekick.cli').select() end,
+    { desc = 'Select CLI' }
+  )
 
-  vim.keymap.set('n', '<leader>ad', function()
-    require('sidekick.cli').close()
-  end, { desc = 'Detach a CLI Session' })
+  vim.keymap.set(
+    'n',
+    '<leader>ad',
+    function() require('sidekick.cli').close() end,
+    { desc = 'Detach a CLI Session' }
+  )
 
-  vim.keymap.set({ 'x', 'n' }, '<leader>at', function()
-    require('sidekick.cli').send({ msg = '{this}' })
-  end, { desc = 'Send This' })
+  vim.keymap.set(
+    { 'x', 'n' },
+    '<leader>at',
+    function() require('sidekick.cli').send({ msg = '{this}' }) end,
+    { desc = 'Send This' }
+  )
 
-  vim.keymap.set('n', '<leader>af', function()
-    require('sidekick.cli').send({ msg = '{file}' })
-  end, { desc = 'Send File' })
+  vim.keymap.set(
+    'n',
+    '<leader>af',
+    function() require('sidekick.cli').send({ msg = '{file}' }) end,
+    { desc = 'Send File' }
+  )
 
-  vim.keymap.set('x', '<leader>av', function()
-    require('sidekick.cli').send({ msg = '{selection}' })
-  end, { desc = 'Send Visual Selection' })
+  vim.keymap.set(
+    'x',
+    '<leader>av',
+    function() require('sidekick.cli').send({ msg = '{selection}' }) end,
+    { desc = 'Send Visual Selection' }
+  )
 
-  vim.keymap.set({ 'n', 'x' }, '<leader>ap', function()
-    require('sidekick.cli').prompt()
-  end, { desc = 'Sidekick Select Prompt' })
+  vim.keymap.set(
+    { 'n', 'x' },
+    '<leader>ap',
+    function() require('sidekick.cli').prompt() end,
+    { desc = 'Sidekick Select Prompt' }
+  )
 
-  vim.keymap.set('n', '<leader>ac', function()
-    require('sidekick.cli').toggle({ name = 'pi', focus = true })
-  end, { desc = 'Sidekick Toggle Pi' })
+  vim.keymap.set(
+    'n',
+    '<leader>ac',
+    function() require('sidekick.cli').toggle({ name = 'pi', focus = true }) end,
+    { desc = 'Sidekick Toggle Pi' }
+  )
   -- stylua: ignore end
 end)
 
@@ -441,6 +457,6 @@ now(function()
   add('webhooked/kanso.nvim')
   add('aktersnurra/no-clown-fiesta.nvim')
 
-  vim.cmd('colorscheme kanso-zen')
+  -- vim.cmd('colorscheme kanso-zen')
   -- vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
 end)
