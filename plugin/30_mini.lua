@@ -317,7 +317,7 @@ end)
 later(
   function()
     require('mini.cmdline').setup({
-      autocomplete = { enable = true },
+      autocomplete = { enable = false },
       autocorrect = { enable = true },
       autopeek = { enable = false },
     })

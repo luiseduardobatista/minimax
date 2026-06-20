@@ -304,7 +304,7 @@ later(function()
         auto_brackets = { enabled = true },
       },
       menu = {
-        border = 'none',
+        -- border = 'none',
         draw = {
           treesitter = { 'lsp' },
           columns = {
@@ -313,13 +313,31 @@ later(function()
           },
         },
       },
-      documentation = { auto_show = true, auto_show_delay_ms = 500 },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 500,
+        window = {
+          -- border = 'none',
+        },
+      },
       ghost_text = { enabled = true },
     },
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
-    cmdline = { enabled = false },
+    cmdline = {
+      keymap = {
+        preset = 'cmdline',
+        ['<Down>'] = { 'select_next', 'fallback' },
+        ['<Up>'] = { 'select_prev', 'fallback' },
+      },
+      completion = {
+        list = { selection = { preselect = false } },
+        -- menu = {
+        --   auto_show = function(ctx) return vim.fn.getcmdtype() == ':' end,
+        -- },
+      },
+    },
     fuzzy = { implementation = 'prefer_rust_with_warning' },
     signature = {
       enabled = true,
@@ -450,13 +468,9 @@ end)
 
 now(function()
   add('vague-theme/vague.nvim')
+  add('oskarnurm/koda.nvim')
   require('vague').setup({
     italic = false,
   })
-
-  add('webhooked/kanso.nvim')
-  add('aktersnurra/no-clown-fiesta.nvim')
-
-  -- vim.cmd('colorscheme kanso-zen')
-  -- vim.api.nvim_set_hl(0, 'MiniPickMatchCurrent', { link = 'Visual' })
+  vim.cmd('colorscheme koda-moss')
 end)
