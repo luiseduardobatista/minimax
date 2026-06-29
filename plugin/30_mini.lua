@@ -69,7 +69,64 @@ end)
 
 -- - Press `g?` inside explorer to see more mappings
 now_if_args(function()
-  require('mini.files').setup({ windows = { preview = true } })
+  require('mini.files').setup({
+    windows = { preview = false },
+    mappings = {
+      go_in = '',
+      go_out = '',
+      go_in_plus = '<Right>',
+      go_out_plus = '<Left>',
+      toggle_hidden = 'g.',
+      reveal_cwd = '@',
+      go_in_split = '<C-w>s',
+      go_in_vsplit = '<C-w>v',
+      go_in_split_plus = '<C-w>S',
+      go_in_vsplit_plus = '<C-w>V',
+    },
+  })
+
+  local copy_file_to_clipboard = function()
+    local entry = MiniFiles.get_fs_entry()
+    if entry then
+      local path = entry.path
+      local uri = 'file://' .. path
+      local cmd = { 'wl-copy', '--type', 'text/uri-list', uri }
+      vim.fn.system(cmd)
+      if vim.v.shell_error == 0 then
+        vim.notify(
+          'Arquivo copiado: ' .. vim.fn.fnamemodify(path, ':t'),
+          vim.log.levels.INFO
+        )
+      else
+        vim.notify('Erro ao copiar (wl-copy instalado?)', vim.log.levels.ERROR)
+      end
+    end
+  end
+
+  local copy_dir_path = function()
+    local entry = MiniFiles.get_fs_entry()
+    if not entry then return end
+    local dir_path = (entry.fs_type == 'directory') and entry.path
+      or vim.fn.fnamemodify(entry.path, ':h')
+    vim.fn.setreg('+', dir_path)
+    vim.notify('Path copiado: ' .. dir_path, vim.log.levels.INFO)
+  end
+
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'MiniFilesBufferCreate',
+    callback = function(args)
+      vim.keymap.set('n', '<Leader>yf', copy_file_to_clipboard, {
+        buffer = args.data.buf_id,
+        desc = 'Copy file object (system clipboard)',
+      })
+      vim.keymap.set(
+        'n',
+        '<Leader>yp',
+        copy_dir_path,
+        { buffer = buf_id, desc = 'Copy directory path' }
+      )
+    end,
+  })
 
   -- Add common bookmarks for every explorer. Example usage inside explorer:
   -- - `'c` to navigate into your config directory
@@ -232,7 +289,17 @@ end)
 -- - `Vaiai` - *V*isually select *a*round *i*ndent scope and then again
 --   reselect *a*round new *i*indent scope
 -- - `[i` / `]i` - navigate to scope's top / bottom
-later(function() require('mini.indentscope').setup() end)
+later(
+  function()
+    require('mini.indentscope').setup({
+      symbol = '│',
+      draw = {
+        delay = 0,
+        animation = require('mini.indentscope').gen_animation.none(),
+      },
+    })
+  end
+)
 
 later(function() require('mini.input').setup() end)
 
@@ -243,7 +310,14 @@ later(function() require('mini.input').setup() end)
 -- - `dt)` - *d*elete *t*ill next closing parenthesis (`)`)
 later(function() require('mini.jump').setup() end)
 
-later(function() require('mini.jump2d').setup() end)
+later(function()
+  local jump2d = require('mini.jump2d')
+  jump2d.setup({
+    spotter = jump2d.gen_spotter.pattern('[^%s%p]+'),
+    labels = 'asdfghjkl;',
+    view = { dim = true, n_steps_ahead = 2 },
+  })
+end)
 
 -- Special key mappings. Provides helpers to map:
 -- - Multi-step actions. Apply action 1 if condition is met; else apply

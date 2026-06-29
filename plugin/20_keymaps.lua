@@ -50,6 +50,11 @@ nmap_leader('bs', new_scratch_buffer,                            'Scratch')
 nmap_leader('bw', '<Cmd>lua MiniBufremove.wipeout()<CR>',        'Wipeout')
 nmap_leader('bW', '<Cmd>lua MiniBufremove.wipeout(0, true)<CR>', 'Wipeout!')
 
+-- Window mappings ===========================================================
+nmap('<leader>-', '<C-W>s', 'Split Window Below')
+nmap('<leader>|', '<C-W>v', 'Split Window Right')
+nmap('<leader>wd', '<C-W>c', 'Delete Current Window')
+
 -- Explore
 local edit_plugin_file = function(filename)
   return string.format('<Cmd>edit %s/plugin/%s<CR>', vim.fn.stdpath('config'), filename)
