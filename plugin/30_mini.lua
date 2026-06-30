@@ -1,6 +1,6 @@
 local now, now_if_args, later = Config.now, Config.now_if_args, Config.later
 
-now(function() vim.cmd('colorscheme miniwinter') end)
+-- now(function() vim.cmd('colorscheme miniwinter') end)
 
 now(function()
   require('mini.basics').setup({
@@ -247,7 +247,13 @@ later(function()
   })
 end)
 
-later(function() require('mini.cmdline').setup() end)
+later(
+  function()
+    require('mini.cmdline').setup({
+      autocorrect = { enable = false },
+    })
+  end
+)
 
 later(function() require('mini.comment').setup() end)
 
