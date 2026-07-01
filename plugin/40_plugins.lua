@@ -111,3 +111,47 @@ now_if_args(function()
   vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
   vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 end)
+
+now_if_args(function()
+  add({
+    'https://github.com/saghen/blink.cmp',
+  })
+  local blink = require('blink.cmp')
+  blink.setup({
+    completion = {
+      accept = {
+        auto_brackets = { enabled = true },
+      },
+      menu = {
+        draw = {
+          treesitter = { 'lsp' },
+          columns = {
+            { 'label', 'label_description', gap = 1 },
+            { 'kind' },
+          },
+        },
+      },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 100,
+      },
+      ghost_text = { enabled = true },
+    },
+    cmdline = {
+      enabled = false,
+    },
+    signature = {
+      enabled = true,
+    },
+    keymap = {
+      preset = 'enter',
+      ['<C-y>'] = { 'select_and_accept' },
+      ['<C-u>'] = { 'scroll_signature_up', 'scroll_documentation_up', 'fallback' },
+      ['<C-d>'] = {
+        'scroll_signature_down',
+        'scroll_documentation_down',
+        'fallback',
+      },
+    },
+  })
+end)
