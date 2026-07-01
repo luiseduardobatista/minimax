@@ -36,6 +36,10 @@
       "rev": "851e865342e5a4cb1ae23d31caf6e991e1c99f1e",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
     },
+    "sidekick.nvim": {
+      "rev": "208e1c5b8170c01fd1d07df0139322a76479b235",
+      "src": "https://github.com/folke/sidekick.nvim"
+    },
     "smart-splits.nvim": {
       "rev": "0e5bc00d2a32e6c782cd279cb96ab6c7ae49cd94",
       "src": "https://github.com/mrjones2014/smart-splits.nvim"
