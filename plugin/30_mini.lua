@@ -247,13 +247,7 @@ later(function()
   })
 end)
 
-later(
-  function()
-    require('mini.cmdline').setup({
-      autocorrect = { enable = false },
-    })
-  end
-)
+later(function() require('mini.cmdline').setup() end)
 
 later(function() require('mini.comment').setup() end)
 
