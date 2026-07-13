@@ -1,5 +1,5 @@
 local add = vim.pack.add
-local now_if_args, later = Config.now_if_args, Config.later
+local now, now_if_args, later = Config.now, Config.now_if_args, Config.later
 
 now_if_args(function()
   -- Define hook to update tree-sitter parsers after plugin is updated
@@ -71,6 +71,7 @@ later(function()
       'gofumpt',
       'ruff',
       'alejandra',
+      'goimports',
     },
   })
 end)
@@ -82,7 +83,7 @@ later(function()
       lua = { 'stylua' },
       nix = { 'alejandra' },
       python = { 'ruff_organize_imports', 'ruff_format' },
-      go = { 'gofmt' },
+      go = { 'goimports', 'gofmt' },
       kdl = { 'kdlfmt' },
     },
     format_on_save = { lsp_fallback = true, timeout_ms = 500 },
@@ -139,6 +140,12 @@ now_if_args(function()
     },
     cmdline = {
       enabled = false,
+      sources = { 'buffer', 'cmdline' },
+      completion = { menu = { auto_show = true } },
+      keymap = {
+        ['<Down>'] = { 'select_next', 'fallback' },
+        ['<Up>'] = { 'select_prev', 'fallback' },
+      },
     },
     signature = {
       enabled = true,
@@ -254,4 +261,19 @@ later(function()
     function() require('sidekick.cli').toggle({ name = 'pi', focus = true }) end,
     { desc = 'Sidekick Toggle Pi' }
   )
+end)
+
+now(function()
+  add({ 'https://github.com/vague-theme/vague.nvim' })
+  require('vague').setup({
+    italic = false,
+    transparent = true,
+    on_highlights = function(hl, colors)
+      -- hl.Pmenu = { fg = colors.fg, bg = colors.inactiveBg }
+      hl.Pmenu = { fg = colors.fg, bg = 'none' }
+      hl.PmenuSel = { fg = colors.fg, bg = colors.line }
+    end,
+  })
+
+  vim.cmd.colorscheme('vague')
 end)
