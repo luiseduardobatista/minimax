@@ -337,40 +337,7 @@ later(function()
   MiniKeymap.map_multistep('i', '<BS>', { 'minipairs_bs' })
 end)
 
--- Move any selection in any direction. Example usage in Normal mode:
--- - `<M-j>`/`<M-k>` - move current line down / up
--- - `<M-h>`/`<M-l>` - decrease / increase indent of current line
---
--- Example usage in Visual mode:
--- - `<M-h>`/`<M-j>`/`<M-k>`/`<M-l>` - move selection left/down/up/right
 later(function() require('mini.move').setup() end)
-
--- Text edit operators. All operators have mappings for:
--- - Regular operator (waits for motion/textobject to use)
--- - Current line action (repeat second character of operator to activate)
--- - Act on visual selection (type operator in Visual mode)
---
--- Example usage:
--- - `griw` - replace (`gr`) *i*inside *w*ord
--- - `gmm` - multiple/duplicate (`gm`) current line (extra `m`)
--- - `vipgs` - *v*isually select *i*nside *p*aragraph and sort it (`gs`)
--- - `gxiww.` - exchange (`gx`) *i*nside *w*ord with next word (`w` to navigate
---   to it and `.` to repeat exchange operator)
--- - `g==` - execute current line as Lua code and replace with its output.
---   For example, typing `g==` over line `vim.lsp.get_clients()` shows
---   information about all available LSP clients.
-later(function()
-  require('mini.operators').setup()
-
-  -- Create mappings for swapping adjacent arguments. Notes:
-  -- - Relies on `a` argument textobject from 'mini.ai'.
-  -- - It is not 100% reliable, but mostly works.
-  -- - It overrides `:h (` and `:h )`.
-  -- Explanation: `gx`-`ia`-`gx`-`ila` <=> exchange current and last argument
-  -- Usage: when on `a` in `(aa, bb)` press `)` followed by `(`.
-  vim.keymap.set('n', '(', 'gxiagxila', { remap = true, desc = 'Swap arg left' })
-  vim.keymap.set('n', ')', 'gxiagxina', { remap = true, desc = 'Swap arg right' })
-end)
 
 later(function() require('mini.pairs').setup({ modes = { command = true } }) end)
 
