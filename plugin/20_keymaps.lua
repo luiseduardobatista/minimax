@@ -18,6 +18,7 @@ nmap('<Esc>', '<Cmd>nohlsearch<CR>', 'Clear highlight')
 -- stylua: ignore start
 Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
+  { mode = 'n', keys = '<Leader>c', desc = '+Code' },
   { mode = 'n', keys = '<Leader>e', desc = '+Explore/Edit' },
   { mode = 'n', keys = '<Leader>f', desc = '+Find' },
   { mode = 'n', keys = '<Leader>g', desc = '+Git' },
@@ -31,11 +32,13 @@ Config.leader_group_clues = {
   { mode = 'x', keys = '<Leader>l', desc = '+Language' },
 }
 
-local nmap_leader = function(suffix, rhs, desc)
-  vim.keymap.set('n', '<Leader>' .. suffix, rhs, { desc = desc })
+local nmap_leader = function(suffix, rhs, desc, opts)
+  local map_opts = vim.tbl_extend('force', { desc = desc }, opts or {})
+  vim.keymap.set('n', '<Leader>' .. suffix, rhs, map_opts)
 end
-local xmap_leader = function(suffix, rhs, desc)
-  vim.keymap.set('x', '<Leader>' .. suffix, rhs, { desc = desc })
+local xmap_leader = function(suffix, rhs, desc, opts)
+  local map_opts = vim.tbl_extend('force', { desc = desc }, opts or {})
+  vim.keymap.set('x', '<Leader>' .. suffix, rhs, map_opts)
 end
 
 -- Buffer
@@ -49,6 +52,7 @@ nmap_leader('bD', '<Cmd>lua MiniBufremove.delete(0, true)<CR>',  'Delete!')
 nmap_leader('bs', new_scratch_buffer,                            'Scratch')
 nmap_leader('bw', '<Cmd>lua MiniBufremove.wipeout()<CR>',        'Wipeout')
 nmap_leader('bW', '<Cmd>lua MiniBufremove.wipeout(0, true)<CR>', 'Wipeout!')
+nmap_leader('bc', '<Cmd>CopyBufferContent<CR>',                  'Copy buffer content', { silent = true })
 
 -- Window mappings ===========================================================
 nmap('<leader>-', '<C-W>s', 'Split Window Below')
@@ -152,7 +156,44 @@ nmap_leader('lt', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', 'Type definition
 
 xmap_leader('lf', '<Cmd>lua require("conform").format()<CR>', 'Format selection')
 
+pcall(vim.keymap.del, 'n', 'grt')
+pcall(vim.keymap.del, 'n', 'gri')
+pcall(vim.keymap.del, 'n', 'grr')
+pcall(vim.keymap.del, 'n', 'gra')
+pcall(vim.keymap.del, 'n', 'grn')
+pcall(vim.keymap.del, 'n', 'grx')
+
+-- LSP custom keymaps (buffer-local, using mini.pick for multiple results)
+local on_list = function(scope)
+  return function(opts)
+    if #opts.items == 1 then
+      vim.lsp.util.show_document(opts.items[1].user_data, 'utf-8')
+      vim.cmd('normal! zz')
+    else
+      require('mini.extra').pickers.lsp({ scope = scope })
+    end
+  end
+end
+
+Config.new_autocmd('LspAttach', nil, function(ev)
+  local bufnr = ev.buf
+  local opts = function(desc)
+    return { buffer = bufnr, desc = desc }
+  end
+  vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition({ on_list = on_list('definition') }) end, opts('LSP Definition'))
+  vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration({ on_list = on_list('declaration') }) end, opts('LSP Declaration'))
+  vim.keymap.set('n', 'gI', function() vim.lsp.buf.implementation({ on_list = on_list('implementation') }) end, opts('LSP Implementation'))
+  vim.keymap.set('n', 'gy', function() vim.lsp.buf.type_definition({ on_list = on_list('type_definition') }) end, opts('LSP Type Definition'))
+  vim.keymap.set('n', 'gr', function() vim.lsp.buf.references(nil, { on_list = on_list('references') }) end, opts('LSP References'))
+end, 'Setup LSP keymaps with mini.pick')
+
 -- Other
+nmap_leader('oa', '<Cmd>CleanCode<CR>',              'Remove comments & empty lines')
+xmap_leader('oa', ':CleanCode<CR>',                  'Remove comments & empty lines')
+nmap_leader('oc', '<Cmd>RemoveComments<CR>',         'Remove comments')
+xmap_leader('oc', ':RemoveComments<CR>',             'Remove comments')
+nmap_leader('oe', ':DeleteBlankLines<CR>',           'Delete empty lines')
+xmap_leader('oe', ':DeleteBlankLines<CR>',           'Delete empty lines')
 nmap_leader('or', '<Cmd>lua MiniMisc.resize_window()<CR>', 'Resize to default width')
 nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>',    'Trim trailspace')
 nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>',          'Zoom toggle')
